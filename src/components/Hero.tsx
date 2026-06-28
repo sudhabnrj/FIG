@@ -1,4 +1,5 @@
 import React from 'react';
+import DotField from './DotField';
 
 interface HeroProps {
   totalQuestions: number;
@@ -6,8 +7,25 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ totalQuestions }) => {
   return (
-    <section className="bg-gradient-to-br from-white to-[#f1f5f9] border-b border-border-custom py-14 px-6 text-center relative">
-      <div className="container mx-auto">
+    <section className="h-[300px] border-b border-border-custom text-center relative">
+
+      <DotField
+        dotRadius={1.5}
+        dotSpacing={14}
+        bulgeStrength={67}
+        glowRadius={160}
+        sparkle={false}
+        waveAmplitude={0}
+        cursorRadius={500}
+        cursorForce={0.1}
+        bulgeOnly
+        gradientFrom="#A855F7"
+        gradientTo="#B497CF"
+        glowColor="#5a4f6cff"
+        height='100%'
+      />
+
+      <div className="container mx-auto bg-transparent absolute top-1/2 -translate-y-1/2 left-0 right-0 w-full h-full">
         <div className="text-xs md:text-sm font-semibold text-text-muted tracking-widest uppercase mb-2">
           Frontend Interview Preparation
         </div>
@@ -35,6 +53,7 @@ export const Hero: React.FC<HeroProps> = ({ totalQuestions }) => {
           </div>
         </div>
       </div>
+
     </section>
   );
 };

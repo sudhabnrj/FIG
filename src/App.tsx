@@ -249,7 +249,7 @@ export const App: React.FC = () => {
           />
 
           {/* Right Main Column */}
-          <section className="col-md-8 col-xl-9 flex-1 main-column">
+          <section className="col-md-8 col-xl-8 flex-1 main-column">
             <div id="questionsContainer" className="relative min-h-[400px]">
               {isLoading && (
                 <div className="flex justify-center items-center py-20">
@@ -293,7 +293,7 @@ export const App: React.FC = () => {
                       id={`${cleanCatId}Section`}
                       className="category-section"
                     >
-                      <h2 className="category-section-title">
+                      <h2 className="category-section-title text-2xl font-bold mb-3">
                         <span>{cat} Interview Questions</span>
                       </h2>
                       <div className="cards-list">

@@ -24,7 +24,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="col-md-4 col-xl-3 hidden md:block sidebar-column">
+    <aside className="col-md-4 col-xl-4 hidden md:block sidebar-column">
       <div className="sticky top-[90px] h-[calc(100vh-120px)] overflow-y-auto p-4 bg-[rgba(255,255,255,0.7)] backdrop-blur-[10px] border border-border-custom rounded-lg shadow-sidebar transition-all duration-300">
         <h5 className="font-bold mb-3 text-uppercase text-text-muted text-[0.8rem] tracking-wider uppercase">
           Categories
@@ -40,22 +40,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <a
                 key={cat.cleanKey}
                 onClick={() => onCategoryClick(countKey)}
-                className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none no-underline ${
-                  isCategoryActive
-                    ? 'bg-primary text-white font-semibold'
-                    : 'text-text-secondary hover:bg-primary-light hover:text-primary'
-                }`}
+                className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none no-underline ${isCategoryActive
+                  ? 'bg-primary text-white font-semibold'
+                  : 'text-text-secondary hover:bg-primary-light hover:text-primary'
+                  }`}
                 style={{ opacity: count === 0 ? 0.5 : 1 }}
               >
                 <span>
                   <i className={`${cat.icon} mr-2`}></i> {cat.name}
                 </span>
                 <span
-                  className={`text-[0.75rem] px-2.5 py-0.5 rounded-full font-semibold transition-all ${
-                    isCategoryActive
-                      ? 'bg-white/20 text-white'
-                      : 'bg-border-light text-text-primary border border-border-custom'
-                  }`}
+                  className={`text-[0.75rem] px-2.5 py-0.5 rounded-full font-semibold transition-all ${isCategoryActive
+                    ? 'bg-white/20 text-white'
+                    : 'bg-border-light text-text-primary border border-border-custom'
+                    }`}
                 >
                   {count}
                 </span>
