@@ -1,2 +1,18 @@
+# Node / Vite build
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
 # Local reference file
 Review question-ans.html
