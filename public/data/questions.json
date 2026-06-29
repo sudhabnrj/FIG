@@ -264,7 +264,7 @@
     "id": 32,
     "category": "JavaScript",
     "question": "What is BOM (Browser Object Model)?",
-    "answer": "The BOM allows JavaScript to interact with the browser itself, not just the webpage. The BOM provides objects like:\n- window\n- location\n- history\n- navigator\n- screen\n- localStorage\n- sessionStorage",
+    "answer": "The Browser Object Model (BOM) is a collection of objects provided by the web browser that lets JavaScript interact with the browser window, not just the webpage. The BOM provides objects like:\n- window\n- location\n- history\n- navigator\n- screen\n- localStorage\n- sessionStorage",
     "diagrams": []
   },
   {
@@ -282,7 +282,6 @@
     "diagrams": [
       "assets/images/primitive-data.png",
       "assets/images/nonprimitive-data.png"
-      
     ]
   },
   {
@@ -328,7 +327,7 @@
     "id": 39,
     "category": "JavaScript",
     "question": "What is Event Delegation?",
-    "answer": "Event Delegation is a JavaScript technique where you attach a single event listener to a parent element instead of adding event listeners to each child element individually.", 
+    "answer": "Event Delegation is a JavaScript technique where you attach a single event listener to a parent element instead of adding event listeners to each child element individually.",
     "diagrams": [
       "assets/images/delegation1.png",
       "assets/images/delegation2.png",
@@ -339,7 +338,7 @@
     "id": 40,
     "category": "Next.js",
     "question": "Difference Between React and Next.js",
-    "answer": "React is a JavaScript library for building user interfaces. \nNext.js is a React framework that adds features like routing, server-side rendering, API routes, and performance optimizations. ", 
+    "answer": "React is a JavaScript library for building user interfaces. \nNext.js is a React framework that adds features like routing, server-side rendering, API routes, and performance optimizations. ",
     "diagrams": [
       "assets/images/16.png"
     ]
