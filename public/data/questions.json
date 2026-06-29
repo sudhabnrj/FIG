@@ -75,7 +75,7 @@
     "id": 11,
     "category": "AI",
     "question": "What is RAG?",
-    "answer": "RAG stands for Retrieval-Augmented Generation.\n It's a AI technique to improve answers by allowing the AI to retrieve relevant information from external sources before generating a response.",
+    "answer": "RAG stands for Retrieval-Augmented Generation. It is an AI technique that retrieves relevant information from external sources before generating a response, making the answer more accurate and based on the latest information.",
     "diagrams": [
       "assets/images/rag.png"
     ]
