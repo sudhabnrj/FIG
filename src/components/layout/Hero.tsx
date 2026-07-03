@@ -1,11 +1,12 @@
-'use client';
-
 import React from 'react';
-import DotField from '../ui/DotField';
-import { useQuestions } from '../../hooks/useQuestions';
+import dynamic from 'next/dynamic';
+import { questionsService } from '../../lib/services/questionsService';
 
-export const Hero: React.FC = () => {
-  const { questions } = useQuestions();
+// Lazy-load the interactive DotField background on the client side only
+const DotField = dynamic(() => import('../ui/DotField'), { ssr: false });
+
+export const Hero = async () => {
+  const questions = await questionsService.fetchQuestions();
 
   return (
     <section className="h-[500px] md:h-[300px] border-b border-border-custom text-center relative overflow-hidden">

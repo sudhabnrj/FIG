@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Question } from '../../types';
 import { parseMarkdown } from '../../utils/markdown';
 import { useQuestions } from '../../hooks/useQuestions';
@@ -95,7 +95,7 @@ const highlightHtml = (htmlContent: string, query: string): string => {
   }
 };
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
+export const QuestionCard = memo(({ question }: QuestionCardProps) => {
   const { isCardExpanded, handleToggleCard, handleCopyQuestion, handleCopyAnswer, handleCopyFullQA } = useQuestions();
   const { query: searchQuery } = useSearch();
 
@@ -211,4 +211,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
       </div>
     </div>
   );
-};
+});
+
+QuestionCard.displayName = 'QuestionCard';

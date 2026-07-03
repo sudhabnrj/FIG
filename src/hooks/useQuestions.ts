@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import Fuse from 'fuse.js';
 import { useAppDispatch, useAppSelector } from './store';
 import { toggleCard, expandAll, collapseAll } from '../features/questions/questionsSlice';
 import { showToast } from '../features/ui/uiSlice';
@@ -10,19 +11,23 @@ export const useQuestions = () => {
   const searchQuery = useAppSelector((state) => state.search.query);
   const categoriesOrder = useAppSelector((state) => state.categories.categoriesOrder);
 
+  // Initialize and memoize the Fuse.js search index
+  const fuse = useMemo(() => {
+    return new Fuse(questions, {
+      keys: [
+        { name: 'question', weight: 2 },
+        { name: 'category', weight: 1.5 },
+        { name: 'answer', weight: 1 },
+      ],
+      threshold: 0.35,
+      ignoreLocation: true,
+    });
+  }, [questions]);
+
   const filteredQuestions = useMemo(() => {
     if (!searchQuery.trim()) return questions;
-    const escapedQuery = searchQuery.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const regex = new RegExp(escapedQuery, 'gi');
-    return questions.filter((q) => {
-      const cleanAnswer = q.answer.replace(/<[^>]*>/g, '');
-      return (
-        q.question.match(regex) ||
-        cleanAnswer.match(regex) ||
-        q.category.match(regex)
-      );
-    });
-  }, [questions, searchQuery]);
+    return fuse.search(searchQuery).map((res) => res.item);
+  }, [fuse, questions, searchQuery]);
 
   const groupedQuestions = useMemo(() => {
     const groups: Record<string, typeof questions> = {};
@@ -90,6 +95,7 @@ export const useQuestions = () => {
     categoryCounts,
     isLoading,
     error,
+    expandedCards,
     handleCopyQuestion,
     handleCopyAnswer,
     handleCopyFullQA,

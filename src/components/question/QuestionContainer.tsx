@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Question } from '../../types';
 import { useAppDispatch } from '../../hooks/store';
 import { setQuestions } from '../../features/questions/questionsSlice';
 import { useQuestions } from '../../hooks/useQuestions';
 import { useSearch } from '../../hooks/useSearch';
-import { useCategories } from '../../hooks/useCategories';
-import { QuestionCard } from './QuestionCard';
+import { VirtualizedQuestionList } from './VirtualizedQuestionList';
 
 interface QuestionContainerProps {
   initialQuestions: Question[];
@@ -23,58 +22,8 @@ export default function QuestionContainer({ initialQuestions }: QuestionContaine
     isInitialized.current = true;
   }
 
-  const { query, updateSearchQuery } = useSearch();
+  const { query, localQuery, updateSearchQuery } = useSearch();
   const { filteredQuestions, groupedQuestions, isLoading, error } = useQuestions();
-  const { selectCategory } = useCategories();
-
-  // Sidebar Scroll-Spy Tracker
-  useEffect(() => {
-    const handleScroll = () => {
-      const categories = ["AI", "UI / UX", "React", "JavaScript", "Next.js"];
-      let currentCat = '';
-
-      // Bottom proximity check
-      const isAtBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 80;
-
-      if (isAtBottom) {
-        for (let i = categories.length - 1; i >= 0; i--) {
-          const cat = categories[i];
-          const cleanId = cat.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + 'Section';
-          const element = document.getElementById(cleanId);
-          if (element && element.offsetHeight > 0) {
-            currentCat = cat.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-            break;
-          }
-        }
-      } else {
-        for (const cat of categories) {
-          const cleanId = cat.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + 'Section';
-          const element = document.getElementById(cleanId);
-          if (element && element.offsetHeight > 0) {
-            const rect = element.getBoundingClientRect();
-            if (rect.top <= 180 && rect.bottom >= 180) {
-              currentCat = cat.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-              break;
-            }
-          }
-        }
-      }
-
-      if (currentCat) {
-        selectCategory(currentCat);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    const timer = setTimeout(handleScroll, 500);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timer);
-    };
-  }, [initialQuestions, query, selectCategory]);
 
   return (
     <section className="col-md-8 col-xl-8 flex-1 main-column">
@@ -84,7 +33,7 @@ export default function QuestionContainer({ initialQuestions }: QuestionContaine
           <i className="fas fa-search text-text-muted absolute left-4 top-1/2 -translate-y-1/2"></i>
           <input
             type="text"
-            value={query}
+            value={localQuery}
             onChange={(e) => updateSearchQuery(e.target.value)}
             className="form-control w-full pl-10 pr-4 py-2.5 bg-white border border-border-custom rounded-lg shadow-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
             placeholder="Search Q&A..."
@@ -123,32 +72,9 @@ export default function QuestionContainer({ initialQuestions }: QuestionContaine
           </div>
         )}
 
-        {!isLoading &&
-          !error &&
-          Object.entries(groupedQuestions).map(([cat, catQuestions]) => {
-            if (catQuestions.length === 0) return null;
-            const cleanCatId = cat.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-
-            return (
-              <section
-                key={cat}
-                id={`${cleanCatId}Section`}
-                className="category-section"
-              >
-                <h2 className="category-section-title text-2xl font-bold mb-3">
-                  <span>{cat} Interview Questions</span>
-                </h2>
-                <div className="cards-list">
-                  {catQuestions.map((q) => (
-                    <QuestionCard
-                      key={q.id}
-                      question={q}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+        {!isLoading && !error && filteredQuestions.length > 0 && (
+          <VirtualizedQuestionList groupedQuestions={groupedQuestions} />
+        )}
       </div>
     </section>
   );

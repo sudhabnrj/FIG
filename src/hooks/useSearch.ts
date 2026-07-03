@@ -1,17 +1,34 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from './store';
 import { setSearchQuery } from '../features/search/searchSlice';
+import { debounce } from '../utils/debounce';
 
 export const useSearch = () => {
   const dispatch = useAppDispatch();
-  const query = useAppSelector((state) => state.search.query);
+  const globalQuery = useAppSelector((state) => state.search.query);
+  const [localQuery, setLocalQuery] = useState(globalQuery);
+
+  // Sync local query if global query changes from elsewhere (e.g. resets)
+  useEffect(() => {
+    setLocalQuery(globalQuery);
+  }, [globalQuery]);
+
+  // Create a memoized debounced dispatch helper
+  const debouncedDispatch = useMemo(
+    () => debounce((value: string) => {
+      dispatch(setSearchQuery(value));
+    }, 300),
+    [dispatch]
+  );
 
   const updateSearchQuery = useCallback((newQuery: string) => {
-    dispatch(setSearchQuery(newQuery));
-  }, [dispatch]);
+    setLocalQuery(newQuery);
+    debouncedDispatch(newQuery);
+  }, [debouncedDispatch]);
 
   return {
-    query,
+    query: globalQuery,
+    localQuery,
     updateSearchQuery,
   };
 };

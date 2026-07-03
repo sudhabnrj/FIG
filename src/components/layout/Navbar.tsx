@@ -6,7 +6,7 @@ import { useSidebar } from '../../hooks/useSidebar';
 import { useQuestions } from '../../hooks/useQuestions';
 
 export const Navbar: React.FC = () => {
-  const { query, updateSearchQuery } = useSearch();
+  const { localQuery, updateSearchQuery } = useSearch();
   const { openSidebar } = useSidebar();
   const { filteredQuestions } = useQuestions();
   
@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
             <input
               ref={searchInputRef}
               type="text"
-              value={query}
+              value={localQuery}
               onChange={(e) => updateSearchQuery(e.target.value)}
               className="form-control w-full pl-9 pr-16 py-1 text-sm bg-white border border-border-custom rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="Search Q&A... (Ctrl + F)"

@@ -3,7 +3,11 @@ import './globals.css';
 import StoreProvider from '../store/StoreProvider';
 import { Navbar } from '../components/layout/Navbar';
 import { Hero } from '../components/layout/Hero';
-import { MobileSidebar } from '../components/layout/MobileSidebar';
+import dynamic from 'next/dynamic';
+const MobileSidebar = dynamic(
+  () => import('../components/layout/MobileSidebar').then((mod) => mod.MobileSidebar),
+  { ssr: false }
+);
 import { Toast } from '../components/ui/Toast';
 import { ScrollToTop } from '../components/ui/ScrollToTop';
 import React from 'react';
