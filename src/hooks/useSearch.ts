@@ -22,8 +22,10 @@ export const useSearch = () => {
   );
 
   const updateSearchQuery = useCallback((newQuery: string) => {
-    setLocalQuery(newQuery);
-    debouncedDispatch(newQuery);
+    if (typeof newQuery !== 'string') return;
+    const truncatedQuery = newQuery.slice(0, 100);
+    setLocalQuery(truncatedQuery);
+    debouncedDispatch(truncatedQuery);
   }, [debouncedDispatch]);
 
   return {

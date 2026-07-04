@@ -4,11 +4,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearch } from '../../hooks/useSearch';
 import { useSidebar } from '../../hooks/useSidebar';
 import { useQuestions } from '../../hooks/useQuestions';
+import { useTheme } from '../../hooks/useTheme';
+import { APP_CONFIG } from '../../config/app';
 
 export const Navbar: React.FC = () => {
   const { localQuery, updateSearchQuery } = useSearch();
   const { openSidebar } = useSidebar();
   const { filteredQuestions } = useQuestions();
+  const { theme, toggleAppTheme } = useTheme();
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -37,7 +40,7 @@ export const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-[1020] bg-[rgba(255,255,255,0.85)] backdrop-blur-[12px] border-b border-border-custom shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)] transition-all duration-300 py-2 px-3">
+    <header className="sticky top-0 z-[1020] bg-navbar backdrop-blur-[12px] border-b border-border-custom shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)] transition-all duration-300 py-2 px-3">
       <div className="container-fluid flex items-center justify-between mx-auto">
         {/* Brand Title */}
         <a className="flex items-center no-underline text-text-primary" href="#">
@@ -46,7 +49,7 @@ export const Navbar: React.FC = () => {
               <i className="fas fa-graduation-cap"></i>
             </div>
             <span className="text-xl font-bold tracking-tight hidden md:flex">
-              Interview Preparation Guide
+              {APP_CONFIG.title}
             </span>
           </div>
         </a>
@@ -77,13 +80,29 @@ export const Navbar: React.FC = () => {
             </span>
           </div>
 
-          {/* Theme Indicator (Light Only) */}
-          <div className="hidden sm:flex items-center text-warning cursor-default" title="Light Theme Only">
-            <i className="fas fa-sun text-lg"></i>
-            <span className="ml-1.5 text-text-muted font-semibold hidden lg:inline text-[0.8rem]">
-              Light
-            </span>
-          </div>
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleAppTheme}
+            className="flex items-center text-warning hover:text-warning/80 transition-colors cursor-pointer bg-transparent border-0 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-primary select-none"
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          >
+            {theme === 'light' ? (
+              <>
+                <i className="fas fa-sun text-lg"></i>
+                <span className="ml-1.5 text-text-muted font-semibold hidden lg:inline text-[0.8rem]">
+                  Light
+                </span>
+              </>
+            ) : (
+              <>
+                <i className="fas fa-moon text-lg text-indigo-400"></i>
+                <span className="ml-1.5 text-text-muted font-semibold hidden lg:inline text-[0.8rem]">
+                  Dark
+                </span>
+              </>
+            )}
+          </button>
 
           {/* Mobile Sidebar Toggle */}
           <button

@@ -3,37 +3,32 @@
 import React from 'react';
 import { useCategories } from '../../hooks/useCategories';
 import { useQuestions } from '../../hooks/useQuestions';
+import { CATEGORIES_LIST } from '../../config/settings';
 
 export const Sidebar: React.FC = () => {
   const { activeCategory, handleCategoryClick } = useCategories();
   const { categoryCounts, handleExpandAll, handleCollapseAll } = useQuestions();
 
-  const categoriesList = [
-    { name: 'AI', cleanKey: 'ai', icon: 'fas fa-brain' },
-    { name: 'UI / UX', cleanKey: 'uiux', icon: 'fas fa-pen-nib' },
-    { name: 'React JS', cleanKey: 'react', icon: 'fab fa-react', matchKey: 'React' },
-    { name: 'JavaScript', cleanKey: 'javascript', icon: 'fab fa-js' },
-    { name: 'Next.js', cleanKey: 'nextjs', icon: 'fas fa-square' },
-  ];
-
   return (
     <aside className="col-md-4 col-xl-4 hidden md:block sidebar-column ">
-      <div className="sticky top-[90px] h-[calc(100vh-120px)] overflow-y-auto p-4 bg-[rgba(255,255,255,0.7)] backdrop-blur-[10px] border border-border-custom rounded-lg shadow-sidebar transition-all duration-300">
+      <div className="sticky top-[90px] h-[calc(100vh-120px)] overflow-y-auto p-4 bg-sidebar backdrop-blur-[10px] border border-border-custom rounded-lg shadow-sidebar transition-all duration-300">
         <h5 className="font-bold mb-3 text-uppercase text-text-muted text-[0.8rem] tracking-wider uppercase">
           Categories
         </h5>
 
-        <nav className="flex flex-col mb-4">
-          {categoriesList.map((cat) => {
+        <nav className="flex flex-col mb-4" aria-label="Question categories">
+          {CATEGORIES_LIST.map((cat) => {
             const countKey = cat.matchKey || cat.name;
             const count = categoryCounts[countKey] || 0;
             const isCategoryActive = activeCategory.toLowerCase() === (cat.matchKey || cat.name).toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
 
             return (
-              <a
+              <button
                 key={cat.cleanKey}
+                type="button"
                 onClick={() => handleCategoryClick(countKey)}
-                className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none no-underline ${
+                aria-current={isCategoryActive ? 'true' : undefined}
+                className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none w-full text-left bg-transparent ${
                   isCategoryActive
                     ? 'bg-primary text-white font-semibold'
                     : 'text-text-secondary hover:bg-primary-light hover:text-primary'
@@ -52,7 +47,7 @@ export const Sidebar: React.FC = () => {
                 >
                   {count}
                 </span>
-              </a>
+              </button>
             );
           })}
         </nav>

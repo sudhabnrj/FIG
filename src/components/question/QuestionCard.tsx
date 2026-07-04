@@ -1,22 +1,16 @@
 'use client';
 
 import React, { useMemo, memo } from 'react';
+import DOMPurify from 'dompurify';
 import { Question } from '../../types';
 import { parseMarkdown } from '../../utils/markdown';
 import { useQuestions } from '../../hooks/useQuestions';
 import { useSearch } from '../../hooks/useSearch';
+import { BADGE_COLORS } from '../../config/theme';
 
 interface QuestionCardProps {
   question: Question;
 }
-
-const badgeColors: Record<string, string> = {
-  'AI': 'bg-lavender text-white',
-  'UI / UX': 'bg-accent text-white',
-  'React': 'bg-[#0ea5e9] text-white',
-  'JavaScript': 'bg-[#eab308] text-[#0f172a]',
-  'Next.js': 'bg-black text-white'
-};
 
 const highlightText = (text: string, query: string): React.ReactNode => {
   if (!query) return text;
@@ -116,7 +110,18 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
     return highlightHtml(parsedAnswerHtml, searchQuery);
   }, [parsedAnswerHtml, searchQuery]);
 
-  const badgeClass = badgeColors[question.category] || 'bg-primary text-white';
+  const sanitizedAnswerHtml = useMemo(() => {
+    if (typeof window === 'undefined') return highlightedAnswerHtml;
+    return DOMPurify.sanitize(highlightedAnswerHtml, {
+      ALLOWED_TAGS: [
+        'p', 'br', 'ul', 'ol', 'li', 'code', 'pre', 'table', 'thead', 'tbody',
+        'tr', 'th', 'td', 'div', 'mark', 'span', 'strong', 'em', 'a'
+      ],
+      ALLOWED_ATTR: ['class', 'id', 'href', 'target', 'rel', 'src', 'alt', 'loading']
+    });
+  }, [highlightedAnswerHtml]);
+
+  const badgeClass = BADGE_COLORS[question.category] || 'bg-primary text-white';
 
   return (
     <div
@@ -140,37 +145,43 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
       </div>
 
       <div className="px-6 pb-6 pt-0">
-        <div
+        <button
           onClick={() => handleToggleCard(question.id)}
-          className="flex justify-between items-center gap-6 w-full cursor-pointer py-1.5 rounded transition-all select-none"
+          aria-expanded={isExpanded}
+          aria-controls={`answer-${question.id}`}
+          className="flex justify-between items-center gap-6 w-full cursor-pointer py-1.5 rounded transition-all select-none bg-transparent border-0 text-left p-0 font-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          <h3 className="text-xl font-bold leading-snug text-text-primary transition-all hover:text-primary">
+          <h3 className="text-xl font-bold leading-snug text-text-primary transition-all hover:text-primary m-0">
             {highlightText(question.question, searchQuery)}
           </h3>
           <span
             className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-border-light text-text-muted transition-all duration-300 flex-shrink-0 ${
               isExpanded ? 'rotate-180 bg-primary text-white' : 'hover:bg-primary-light hover:text-primary'
             }`}
+            aria-hidden="true"
           >
             <i className="fas fa-chevron-down"></i>
           </span>
-        </div>
+        </button>
 
         <div className="flex flex-wrap gap-2 mt-3 print:hidden">
           <button
             onClick={() => handleCopyQuestion(question.id)}
+            aria-label={`Copy Question #${question.id} text`}
             className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none"
           >
             <i className="far fa-copy"></i> Copy Q
           </button>
           <button
             onClick={() => handleCopyAnswer(question.id)}
+            aria-label={`Copy Answer to Question #${question.id}`}
             className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none"
           >
             <i className="far fa-copy"></i> Copy A
           </button>
           <button
             onClick={() => handleCopyFullQA(question.id)}
+            aria-label={`Copy Question and Answer #${question.id}`}
             className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none"
           >
             <i className="far fa-copy"></i> Copy Q&A
@@ -179,13 +190,16 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
 
         {/* Collapsible Answer Body */}
         <div
+          id={`answer-${question.id}`}
+          role="region"
+          aria-labelledby={`card-${question.id}`}
           className={`grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
             isExpanded ? 'grid-rows-[1fr] opacity-100 mt-4 border-t border-border-light pt-4' : 'grid-rows-[0fr] opacity-0'
           }`}
         >
           <div className="overflow-hidden">
             <div className="answer-container text-text-secondary text-[0.975rem] leading-relaxed">
-              <div dangerouslySetInnerHTML={{ __html: highlightedAnswerHtml }} />
+              <div dangerouslySetInnerHTML={{ __html: sanitizedAnswerHtml }} />
 
               {/* Lazy Loaded Diagrams rendering */}
               {question.diagrams && question.diagrams.length > 0 && (

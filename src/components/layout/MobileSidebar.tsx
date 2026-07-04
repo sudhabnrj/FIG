@@ -4,19 +4,12 @@ import React from 'react';
 import { useSidebar } from '../../hooks/useSidebar';
 import { useCategories } from '../../hooks/useCategories';
 import { useQuestions } from '../../hooks/useQuestions';
+import { CATEGORIES_LIST } from '../../config/settings';
 
 export const MobileSidebar: React.FC = () => {
   const { isOpen, closeSidebar } = useSidebar();
   const { activeCategory, handleCategoryClick } = useCategories();
   const { categoryCounts, handleExpandAll, handleCollapseAll } = useQuestions();
-
-  const categoriesList = [
-    { name: 'AI', cleanKey: 'ai', icon: 'fas fa-brain' },
-    { name: 'UI / UX', cleanKey: 'uiux', icon: 'fas fa-pen-nib' },
-    { name: 'React JS', cleanKey: 'react', icon: 'fab fa-react', matchKey: 'React' },
-    { name: 'JavaScript', cleanKey: 'javascript', icon: 'fab fa-js' },
-    { name: 'Next.js', cleanKey: 'nextjs', icon: 'fas fa-square' },
-  ];
 
   return (
     <>
@@ -30,7 +23,7 @@ export const MobileSidebar: React.FC = () => {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 bottom-0 left-0 w-80 max-w-[80vw] bg-white z-[1050] border-r border-border-custom shadow-2xl transition-transform duration-300 md:hidden flex flex-col ${
+        className={`fixed top-0 bottom-0 left-0 w-80 max-w-[80vw] bg-cardBg z-[1050] border-r border-border-custom shadow-2xl transition-transform duration-300 md:hidden flex flex-col ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -52,20 +45,22 @@ export const MobileSidebar: React.FC = () => {
           <h6 className="font-bold text-uppercase text-text-muted text-[0.8rem] tracking-wider uppercase mb-3">
             Categories
           </h6>
-          <nav className="flex flex-col mb-6">
-            {categoriesList.map((cat) => {
+          <nav className="flex flex-col mb-6" aria-label="Mobile categories menu">
+            {CATEGORIES_LIST.map((cat) => {
               const countKey = cat.matchKey || cat.name;
               const count = categoryCounts[countKey] || 0;
               const isCategoryActive = activeCategory.toLowerCase() === (cat.matchKey || cat.name).toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
 
               return (
-                <a
+                <button
                   key={cat.cleanKey}
+                  type="button"
                   onClick={() => {
                     handleCategoryClick(countKey);
                     closeSidebar();
                   }}
-                  className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none no-underline ${
+                  aria-current={isCategoryActive ? 'true' : undefined}
+                  className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none w-full text-left bg-transparent ${
                     isCategoryActive
                       ? 'bg-primary text-white font-semibold'
                       : 'text-text-secondary hover:bg-primary-light hover:text-primary'
@@ -84,7 +79,7 @@ export const MobileSidebar: React.FC = () => {
                   >
                     {count}
                   </span>
-                </a>
+                </button>
               );
             })}
           </nav>
@@ -107,7 +102,7 @@ export const MobileSidebar: React.FC = () => {
                 handleCollapseAll();
                 closeSidebar();
               }}
-              className="btn bg-white hover:bg-border-light text-text-secondary border border-border-custom text-xs font-semibold py-2 px-3 rounded flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              className="btn bg-white dark:bg-cardBg hover:bg-border-light dark:hover:bg-slate-800 text-text-secondary border border-border-custom text-xs font-semibold py-2 px-3 rounded flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <i className="fas fa-compress-arrows-alt"></i> Collapse All Answers
             </button>

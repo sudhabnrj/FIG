@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,19 +8,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        body: "#f7f9fc",
-        cardBg: "#ffffff",
-        primary: "#4f46e5",
-        "primary-light": "#e0e7ff",
-        accent: "#0284c7",
-        "accent-light": "#e0f2fe",
-        lavender: "#7c3aed",
-        success: "#10b981",
-        "text-primary": "#1e293b",
-        "text-secondary": "#475569",
-        "text-muted": "#64748b",
-        "border-light": "#f1f5f9",
-        "border-custom": "#e2e8f0",
+        body: "var(--bg-body)",
+        cardBg: "var(--bg-card)",
+        navbar: "var(--bg-navbar)",
+        sidebar: "var(--bg-sidebar)",
+        primary: "var(--color-primary)",
+        "primary-light": "var(--color-primary-light)",
+        accent: "var(--color-accent)",
+        "accent-light": "var(--color-accent-light)",
+        lavender: "var(--color-lavender)",
+        success: "var(--color-success)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        "text-muted": "var(--text-muted)",
+        "border-light": "var(--border-light)",
+        "border-custom": "var(--border-color)",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

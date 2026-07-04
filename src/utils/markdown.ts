@@ -85,3 +85,17 @@ export const parseMarkdown = (text: string): string => {
   
   return formattedBlocks.join('\n');
 };
+
+export const extractPlainText = (htmlContent: string): string => {
+  if (typeof window === 'undefined') {
+    return htmlContent.replace(/<[^>]*>/g, '');
+  }
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+    return doc.body.textContent || doc.body.innerText || '';
+  } catch (err) {
+    console.error('Failed to extract plain text:', err);
+    return htmlContent.replace(/<[^>]*>/g, '');
+  }
+};
