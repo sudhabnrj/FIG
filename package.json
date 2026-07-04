@@ -10,15 +10,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dompurify": "^3.4.11",
     "fuse.js": "^7.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-window": "^2.2.7"
+    "react-window": "^2.2.7",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@reduxjs/toolkit": "^2.12.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/dompurify": "^3.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
