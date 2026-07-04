@@ -6,11 +6,7 @@ type RouteHandler = (request: NextRequest, ...args: any[]) => Promise<NextRespon
 export function withErrorHandler(handler: RouteHandler): RouteHandler {
   return async (request: NextRequest, ...args: any[]) => {
     try {
-      try {
-        await dbConnect();
-      } catch (dbError: any) {
-        console.warn('⚠️ Database connection failed. Operating in offline resilient mode:', dbError.message);
-      }
+      await dbConnect();
       return await handler(request, ...args);
     } catch (error: any) {
       console.error('💥 API Error:', error);

@@ -7,23 +7,11 @@ export const questionsService = {
         const { questionService } = await import('../../server/services/QuestionService');
         const { dbConnect } = await import('../../server/config/database');
         
-        try {
-          await dbConnect();
-          const { questions } = await questionService.getQuestions({}, { limit: 1000 });
-          return JSON.parse(JSON.stringify(questions));
-        } catch (dbError) {
-          console.warn('⚠️ Server-side DB connection failed. Falling back to local JSON data:', dbError);
-          const fs = await import('fs');
-          const path = await import('path');
-          const filePath = path.join(process.cwd(), 'public', 'data', 'questions.json');
-          if (fs.existsSync(filePath)) {
-            const raw = fs.readFileSync(filePath, 'utf8');
-            return JSON.parse(raw);
-          }
-          return [];
-        }
+        await dbConnect();
+        const { questions } = await questionService.getQuestions({}, { limit: 1000 });
+        return JSON.parse(JSON.stringify(questions));
       } catch (error) {
-        console.error('Failed to import or execute server-side question fetch:', error);
+        console.error('Failed to fetch questions on server side:', error);
         return [];
       }
     } else {
