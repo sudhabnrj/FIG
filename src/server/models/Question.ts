@@ -39,7 +39,7 @@ const QuestionSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-QuestionSchema.pre('validate', function (this: any, next: any) {
+QuestionSchema.pre('validate', function (this: any) {
   const q = this;
   if (!q.title && q.question) {
     q.title = q.question.length > 60 ? q.question.slice(0, 57) + '...' : q.question;
@@ -53,7 +53,6 @@ QuestionSchema.pre('validate', function (this: any, next: any) {
       .replace(/-+/g, '-')
       .slice(0, 80);
   }
-  next();
 });
 
 export const Question = mongoose.models.Question || mongoose.model<IQuestion>('Question', QuestionSchema);
