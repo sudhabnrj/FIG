@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import StoreProvider from '../store/StoreProvider';
+import { ThemeProvider } from '../components/ui/ThemeProvider';
 import { Navbar } from '../components/layout/Navbar';
 import { Hero } from '../components/layout/Hero';
 import dynamic from 'next/dynamic';
@@ -12,11 +13,12 @@ import { Toast } from '../components/ui/Toast';
 import { ScrollToTop } from '../components/ui/ScrollToTop';
 import React from 'react';
 import { questionsService } from '../lib/services/questionsService';
+import { APP_CONFIG } from '../config/app';
 
 export const metadata: Metadata = {
-  title: 'Interview Preparation Guide - AI, UI/UX, React, JavaScript, Next.js',
-  description: 'Modern, clean, and interactive Frontend Interview Preparation Q&A Guide covering AI, UI/UX, React, JavaScript, and Next.js.',
-  authors: [{ name: 'Frontend Architect' }],
+  title: APP_CONFIG.title,
+  description: APP_CONFIG.description,
+  authors: [{ name: APP_CONFIG.author }],
 };
 
 export default async function RootLayout({
@@ -41,35 +43,37 @@ export default async function RootLayout({
       </head>
       <body>
         <StoreProvider initialQuestions={questions}>
-          <div className="min-h-screen flex flex-col bg-body">
-            {/* Sticky Navbar */}
-            <Navbar />
+          <ThemeProvider>
+            <div className="min-h-screen flex flex-col bg-body text-text-primary transition-colors duration-300">
+              {/* Sticky Navbar */}
+              <Navbar />
 
-            {/* Hero Banner */}
-            <Hero />
+              {/* Hero Banner */}
+              <Hero />
 
-            {/* Main Layout and Children Page content */}
-            {children}
+              {/* Main Layout and Children Page content */}
+              {children}
 
-            {/* Mobile Drawer Menu */}
-            <MobileSidebar />
+              {/* Mobile Drawer Menu */}
+              {MobileSidebar && <MobileSidebar />}
 
-            {/* Footer */}
-            <footer className="bg-white border-t border-border-custom py-4 text-center mt-5 text-text-muted text-[0.85rem]">
-              <div className="container mx-auto">
-                <p className="mb-1">&copy; 2026 Interview Preparation Guide. All Rights Reserved.</p>
-                <p className="mb-0 text-text-muted text-[0.75rem]">
-                  Redesigned & Modernized with Premium Accessibility and Responsive UX.
-                </p>
-              </div>
-            </footer>
+              {/* Footer */}
+              <footer className="bg-white dark:bg-[#151d30] border-t border-border-custom py-4 text-center mt-5 text-text-muted text-[0.85rem] transition-colors duration-300">
+                <div className="container mx-auto">
+                  <p className="mb-1">&copy; 2026 Interview Preparation Guide. All Rights Reserved.</p>
+                  <p className="mb-0 text-text-muted text-[0.75rem]">
+                    Redesigned & Modernized with Premium Accessibility and Responsive UX.
+                  </p>
+                </div>
+              </footer>
 
-            {/* Scroll back to top */}
-            <ScrollToTop />
+              {/* Scroll back to top */}
+              <ScrollToTop />
 
-            {/* Toast Notifications */}
-            <Toast />
-          </div>
+              {/* Toast Notifications */}
+              <Toast />
+            </div>
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

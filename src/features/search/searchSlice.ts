@@ -13,7 +13,9 @@ const searchSlice = createSlice({
   initialState,
   reducers: {
     setSearchQuery(state, action: PayloadAction<string>) {
-      state.query = action.payload;
+      if (typeof action.payload === 'string') {
+        state.query = action.payload.slice(0, 100);
+      }
     },
   },
 });

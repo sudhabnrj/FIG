@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from './store';
 import { toggleCard, expandAll, collapseAll } from '../features/questions/questionsSlice';
 import { showToast } from '../features/ui/uiSlice';
 import { copyToClipboard } from '../utils/copyToClipboard';
+import { parseMarkdown, extractPlainText } from '../utils/markdown';
 
 export const useQuestions = () => {
   const dispatch = useAppDispatch();
@@ -57,8 +58,9 @@ export const useQuestions = () => {
   const handleCopyAnswer = useCallback((id: number) => {
     const q = questions.find((item) => item.id === id);
     if (!q) return;
+    const plainAnswer = extractPlainText(parseMarkdown(q.answer));
     copyToClipboard(
-      `Answer to Question #${q.id}:\n\n${q.answer.replace(/<[^>]*>/g, '')}`,
+      `Answer to Question #${q.id}:\n\n${plainAnswer}`,
       () => dispatch(showToast('Answer copied successfully'))
     );
   }, [questions, dispatch]);
@@ -66,8 +68,9 @@ export const useQuestions = () => {
   const handleCopyFullQA = useCallback((id: number) => {
     const q = questions.find((item) => item.id === id);
     if (!q) return;
+    const plainAnswer = extractPlainText(parseMarkdown(q.answer));
     copyToClipboard(
-      `Question #${q.id} [Category: ${q.category}]\n\nQuestion:\n${q.question}\n\nAnswer:\n${q.answer.replace(/<[^>]*>/g, '')}`,
+      `Question #${q.id} [Category: ${q.category}]\n\nQuestion:\n${q.question}\n\nAnswer:\n${plainAnswer}`,
       () => dispatch(showToast('Question & Answer copied successfully'))
     );
   }, [questions, dispatch]);

@@ -17,12 +17,19 @@ const categoriesSlice = createSlice({
   initialState,
   reducers: {
     setActiveCategory(state, action: PayloadAction<string>) {
-      state.activeCategory = action.payload;
+      const allowedCategories = ['ai', 'uiux', 'react', 'javascript', 'nextjs'];
+      const cleaned = action.payload.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      if (allowedCategories.includes(cleaned)) {
+        state.activeCategory = cleaned;
+      }
     },
     clickCategory(state, action: PayloadAction<string>) {
+      const allowedCategories = ['ai', 'uiux', 'react', 'javascript', 'nextjs'];
       const cleaned = action.payload.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-      state.clickedCategory = cleaned;
-      state.activeCategory = cleaned;
+      if (allowedCategories.includes(cleaned)) {
+        state.clickedCategory = cleaned;
+        state.activeCategory = cleaned;
+      }
     },
     clearClickedCategory(state) {
       state.clickedCategory = null;

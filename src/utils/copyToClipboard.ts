@@ -1,17 +1,25 @@
 export const copyToClipboard = (text: string, onSuccess: () => void) => {
   if (typeof window === 'undefined') return;
 
+  if (typeof text !== 'string' || !text.trim()) {
+    console.error('Invalid content provided for clipboard copy');
+    return;
+  }
+
+  // Safe bounds check to protect clipboard space
+  const safeText = text.slice(0, 10000);
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard.writeText(safeText)
       .then(() => {
         onSuccess();
       })
       .catch((err) => {
         console.error('Clipboard write error: ', err);
-        fallbackCopyToClipboard(text, onSuccess);
+        fallbackCopyToClipboard(safeText, onSuccess);
       });
   } else {
-    fallbackCopyToClipboard(text, onSuccess);
+    fallbackCopyToClipboard(safeText, onSuccess);
   }
 };
 
