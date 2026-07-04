@@ -55,7 +55,7 @@ export default async function RootLayout({
               {children}
 
               {/* Mobile Drawer Menu */}
-              {MobileSidebar && <MobileSidebar />}
+              <MobileSidebar />
 
               {/* Footer */}
               <footer className="bg-white dark:bg-[#151d30] border-t border-border-custom py-4 text-center mt-5 text-text-muted text-[0.85rem] transition-colors duration-300">
