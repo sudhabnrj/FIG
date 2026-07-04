@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Question } from '../../types';
 import { useAppDispatch } from '../../hooks/store';
 import { setQuestions } from '../../features/questions/questionsSlice';
@@ -17,10 +17,12 @@ export default function QuestionContainer({ initialQuestions }: QuestionContaine
   const isInitialized = useRef(false);
 
   // Initialize store questions with SSR data on mount
-  if (!isInitialized.current) {
-    dispatch(setQuestions(initialQuestions));
-    isInitialized.current = true;
-  }
+  useEffect(() => {
+    if (!isInitialized.current) {
+      dispatch(setQuestions(initialQuestions));
+      isInitialized.current = true;
+    }
+  }, [dispatch, initialQuestions]);
 
   const { query, localQuery, updateSearchQuery } = useSearch();
   const { filteredQuestions, groupedQuestions, isLoading, error } = useQuestions();

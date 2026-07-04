@@ -11,6 +11,7 @@ const MobileSidebar = dynamic(
 import { Toast } from '../components/ui/Toast';
 import { ScrollToTop } from '../components/ui/ScrollToTop';
 import React from 'react';
+import { questionsService } from '../lib/services/questionsService';
 
 export const metadata: Metadata = {
   title: 'Interview Preparation Guide - AI, UI/UX, React, JavaScript, Next.js',
@@ -18,11 +19,14 @@ export const metadata: Metadata = {
   authors: [{ name: 'Frontend Architect' }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Fetch questions on the server-side to initialize the Redux store seamlessly
+  const questions = await questionsService.fetchQuestions();
+
   return (
     <html lang="en">
       <head>
@@ -36,7 +40,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <StoreProvider>
+        <StoreProvider initialQuestions={questions}>
           <div className="min-h-screen flex flex-col bg-body">
             {/* Sticky Navbar */}
             <Navbar />
