@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '../services/AuthService';
+import { IUser } from '../models/User';
 
-type ProtectedRouteHandler = (request: NextRequest & { user: any }, ...args: any[]) => Promise<NextResponse>;
+export interface AuthenticatedNextRequest extends NextRequest {
+  user: IUser;
+}
 
-export function withAuth(handler: ProtectedRouteHandler): any {
-  return async (request: NextRequest, ...args: any[]) => {
+type ProtectedRouteHandler = (request: AuthenticatedNextRequest, ...args: unknown[]) => Promise<NextResponse>;
+
+type RouteHandler = (request: NextRequest, ...args: unknown[]) => Promise<NextResponse>;
+
+export function withAuth(handler: ProtectedRouteHandler): RouteHandler {
+  return async (request: NextRequest, ...args: unknown[]) => {
     const token = request.cookies.get('token')?.value;
 
     if (!token) {
@@ -22,7 +29,7 @@ export function withAuth(handler: ProtectedRouteHandler): any {
       );
     }
 
-    const authRequest = request as any;
+    const authRequest = request as AuthenticatedNextRequest;
     authRequest.user = user;
 
     return handler(authRequest, ...args);

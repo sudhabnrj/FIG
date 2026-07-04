@@ -1,13 +1,14 @@
-name: Production Deployment Pipeline
+name: Security Scan & Audit
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
+  security:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
     - uses: actions/checkout@v4
@@ -17,6 +18,6 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Deploy to Production
-      run: |
-        echo "🚀 Triggering production deployment to Vercel..."
+    - name: Run npm audit
+      run: npm audit --audit-level=high
+      continue-on-error: true

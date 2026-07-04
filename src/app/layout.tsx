@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import StoreProvider from '../store/StoreProvider';
 import { ThemeProvider } from '../components/ui/ThemeProvider';
@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   title: APP_CONFIG.title,
   description: APP_CONFIG.description,
   authors: [{ name: APP_CONFIG.author }],
+  manifest: '/manifest.json',
+};
+
+export const viewport: Viewport = {
+  themeColor: '#3b82f6',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default async function RootLayout({

@@ -151,9 +151,9 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
           aria-controls={`answer-${question.id}`}
           className="flex justify-between items-center gap-6 w-full cursor-pointer py-1.5 rounded transition-all select-none bg-transparent border-0 text-left p-0 font-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          <h3 className="text-xl font-bold leading-snug text-text-primary transition-all hover:text-primary m-0">
+          <span className="text-xl font-bold leading-snug text-text-primary transition-all hover:text-primary m-0 block">
             {highlightText(question.question, searchQuery)}
-          </h3>
+          </span>
           <span
             className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-border-light text-text-muted transition-all duration-300 flex-shrink-0 ${
               isExpanded ? 'rotate-180 bg-primary text-white' : 'hover:bg-primary-light hover:text-primary'
@@ -164,25 +164,25 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
           </span>
         </button>
 
-        <div className="flex flex-wrap gap-2 mt-3 print:hidden">
+        <div className="flex gap-2 items-center flex-wrap pt-2 print:hidden">
           <button
             onClick={() => handleCopyQuestion(question.id)}
             aria-label={`Copy Question #${question.id} text`}
-            className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none"
+            className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <i className="far fa-copy"></i> Copy Q
           </button>
           <button
             onClick={() => handleCopyAnswer(question.id)}
-            aria-label={`Copy Answer to Question #${question.id}`}
-            className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none"
+            aria-label={`Copy Answer #${question.id} text`}
+            className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <i className="far fa-copy"></i> Copy A
           </button>
           <button
             onClick={() => handleCopyFullQA(question.id)}
             aria-label={`Copy Question and Answer #${question.id}`}
-            className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none"
+            className="bg-none border-0 text-text-muted px-3 py-1.5 text-xs font-semibold rounded flex items-center gap-1.5 transition-all hover:bg-border-light hover:text-text-primary cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <i className="far fa-copy"></i> Copy Q&A
           </button>
@@ -209,6 +209,7 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
                       key={idx}
                       className="rounded-md overflow-hidden border border-border-custom bg-black text-center shadow-card"
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={`${diagPath.startsWith('http') || diagPath.startsWith('/') ? '' : '/'}${diagPath}`}
                         alt="Technical Diagram"

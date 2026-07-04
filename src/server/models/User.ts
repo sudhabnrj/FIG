@@ -21,15 +21,18 @@ const UserSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-UserSchema.pre('save', async function (this: any) {
+UserSchema.pre('save', async function (this: IUser) {
   const user = this;
   if (!user.isModified('password')) return;
 
   const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, salt);
+  }
 });
 
-UserSchema.methods.comparePassword = async function (candidate: string): Promise<boolean> {
+UserSchema.methods.comparePassword = async function (this: IUser, candidate: string): Promise<boolean> {
+  if (!this.password) return false;
   return bcrypt.compare(candidate, this.password);
 };
 

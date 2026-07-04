@@ -69,7 +69,7 @@ export default function QuestionContainer({ initialQuestions }: QuestionContaine
             <i className="fas fa-search text-3xl mb-3 text-[#64748b]"></i>
             <h4 className="text-xl font-bold">No Questions Found</h4>
             <p className="text-text-muted mt-1 mb-0">
-              We couldn't find any questions matching "{query}". Try different terms.
+              We couldn&apos;t find any questions matching &ldquo;{query}&rdquo;. Try different terms.
             </p>
           </div>
         )}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Question } from '../../types';
 import { QuestionCard } from './QuestionCard';
 import { useCategories } from '../../hooks/useCategories';
@@ -16,7 +16,12 @@ type VirtualItem =
 export const VirtualizedQuestionList: React.FC<VirtualizedQuestionListProps> = ({
   groupedQuestions,
 }) => {
-  const { clickedCategory, resetClickedCategory, selectCategory } = useCategories();
+  const { activeCategory, clickedCategory, resetClickedCategory, selectCategory } = useCategories();
+
+  const activeCategoryRef = useRef(activeCategory);
+  useEffect(() => {
+    activeCategoryRef.current = activeCategory;
+  }, [activeCategory]);
 
   // Flatten categories and questions into a single item list
   const virtualItems = useMemo(() => {
@@ -67,7 +72,7 @@ export const VirtualizedQuestionList: React.FC<VirtualizedQuestionListProps> = (
         }
       });
 
-      if (activeSectionId) {
+      if (activeSectionId && activeSectionId !== activeCategoryRef.current) {
         selectCategory(activeSectionId);
       }
     };

@@ -6,7 +6,7 @@ export const getQuestionsQuerySchema = z.object({
   category: z.string().optional(),
   difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
   tags: z.string().optional().transform((val) => (val ? val.split(',').map(t => t.trim()) : undefined)),
-  featured: z.string().optional().transform((val) => (val === 'true')),
+  featured: z.string().optional().transform((val) => (val !== undefined ? val === 'true' : undefined)),
   sort: z.string().optional(),
   search: z.string().optional(),
 });

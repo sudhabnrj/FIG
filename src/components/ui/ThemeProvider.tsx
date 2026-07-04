@@ -10,6 +10,19 @@ interface ThemeProviderProps {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { theme, changeTheme } = useTheme();
 
+  // Register PWA service worker
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => {
+          // Service worker successfully registered
+        })
+        .catch((err) => {
+          console.warn('PWA ServiceWorker registration failed:', err);
+        });
+    }
+  }, []);
+
   // Load theme from localStorage on initial mount
   useEffect(() => {
     try {

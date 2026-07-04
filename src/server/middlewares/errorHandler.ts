@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbConnect } from '../config/database';
+import { logger } from '../../lib/logger';
 
 type RouteHandler = (request: NextRequest, ...args: any[]) => Promise<NextResponse>;
 
@@ -9,7 +10,12 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
       await dbConnect();
       return await handler(request, ...args);
     } catch (error: any) {
-      console.error('💥 API Error:', error);
+      logger.error('API Route Error', { 
+        url: request.url, 
+        method: request.method,
+        errorMessage: error.message,
+        stack: error.stack 
+      });
 
       if (error.code === 11000) {
         return NextResponse.json(

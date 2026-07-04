@@ -34,7 +34,7 @@ export const MobileSidebar: React.FC = () => {
           <button
             onClick={closeSidebar}
             type="button"
-            className="text-text-muted hover:text-text-primary text-lg font-bold flex items-center justify-center w-8 h-8 rounded-full hover:bg-border-light transition-colors"
+            className="text-text-muted hover:text-text-primary text-lg font-bold flex items-center justify-center w-8 h-8 rounded-full hover:bg-border-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Close"
           >
             <i className="fas fa-times"></i>
@@ -60,10 +60,10 @@ export const MobileSidebar: React.FC = () => {
                     closeSidebar();
                   }}
                   aria-current={isCategoryActive ? 'true' : undefined}
-                  className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none w-full text-left bg-transparent ${
+                  className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                     isCategoryActive
                       ? 'bg-primary text-white font-semibold'
-                      : 'text-text-secondary hover:bg-primary-light hover:text-primary'
+                      : 'bg-transparent text-text-secondary hover:bg-primary-light hover:text-primary'
                   }`}
                   style={{ opacity: count === 0 ? 0.5 : 1 }}
                 >

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '../services/AuthService';
 import { registerSchema, loginSchema } from '../validators/auth.validator';
+import { AuthenticatedNextRequest } from '../middlewares/auth';
 
 export class AuthController {
   async register(request: NextRequest) {
@@ -109,8 +110,8 @@ export class AuthController {
     return response;
   }
 
-  async me(request: NextRequest) {
-    const user = (request as any).user;
+  async me(request: AuthenticatedNextRequest) {
+    const user = request.user;
     if (!user) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized', errors: ['User details not available'] },

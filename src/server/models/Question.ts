@@ -39,7 +39,7 @@ const QuestionSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-QuestionSchema.pre('validate', function (this: any) {
+QuestionSchema.pre('validate', function (this: IQuestion) {
   const q = this;
   if (!q.title && q.question) {
     q.title = q.question.length > 60 ? q.question.slice(0, 57) + '...' : q.question;

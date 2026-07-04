@@ -1,10 +1,9 @@
-import { NextRequest } from 'next/server';
 import { authController } from '../../../../../server/controllers/AuthController';
 import { withErrorHandler } from '../../../../../server/middlewares/errorHandler';
-import { withAuth } from '../../../../../server/middlewares/auth';
+import { withAuth, AuthenticatedNextRequest } from '../../../../../server/middlewares/auth';
 
 export const GET = withErrorHandler(
-  withAuth(async (request: NextRequest & { user: any }) => {
+  withAuth(async (request: AuthenticatedNextRequest) => {
     return authController.me(request);
   })
 );

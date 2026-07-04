@@ -28,10 +28,10 @@ export const Sidebar: React.FC = () => {
                 type="button"
                 onClick={() => handleCategoryClick(countKey)}
                 aria-current={isCategoryActive ? 'true' : undefined}
-                className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none w-full text-left bg-transparent ${
+                className={`flex items-center justify-between px-[1.2rem] py-[0.8rem] mb-2 font-medium rounded-md transition-all duration-150 cursor-pointer border border-transparent select-none w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   isCategoryActive
                     ? 'bg-primary text-white font-semibold'
-                    : 'text-text-secondary hover:bg-primary-light hover:text-primary'
+                    : 'bg-transparent text-text-secondary hover:bg-primary-light hover:text-primary'
                 }`}
                 style={{ opacity: count === 0 ? 0.5 : 1 }}
               >

@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  compress: true, // Enable gzip compression
+  poweredByHeader: false, // Security: hide X-Powered-By header
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

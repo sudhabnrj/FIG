@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Question, IQuestion } from '../models/Question';
 
 export interface GetQuestionsFilters {
@@ -40,7 +41,7 @@ export class QuestionRepository {
     const limit = options.limit || 20;
     const skip = (page - 1) * limit;
 
-    const query: any = {};
+    const query: mongoose.QueryFilter<IQuestion> = {};
 
     if (filters.isPublished !== undefined) {
       query.isPublished = filters.isPublished;
@@ -59,7 +60,8 @@ export class QuestionRepository {
       } else if (cleanCategory === 'nextjs') {
         query.category = 'Next.js';
       } else {
-        query.category = new RegExp(`^${filters.category}$`, 'i');
+        const escapedCategory = filters.category.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        query.category = new RegExp(`^${escapedCategory}$`, 'i');
       }
     }
 
@@ -76,14 +78,15 @@ export class QuestionRepository {
     }
 
     if (filters.search) {
-      const searchRegex = new RegExp(filters.search, 'i');
+      const escapedSearch = filters.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const searchRegex = new RegExp(escapedSearch, 'i');
       query.$or = [
         { question: searchRegex },
         { answer: searchRegex }
       ];
     }
 
-    let sortObj: any = { id: 1 };
+    let sortObj: Record<string, 1 | -1> = { id: 1 };
     if (options.sort) {
       const parts = options.sort.split(':');
       const field = parts[0];
