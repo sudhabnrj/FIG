@@ -10,9 +10,12 @@ type ProtectedRouteHandler = (request: AuthenticatedNextRequest, ...args: unknow
 
 type RouteHandler = (request: NextRequest, ...args: unknown[]) => Promise<NextResponse>;
 
-export function withAuth(handler: ProtectedRouteHandler): RouteHandler {
+export function withAuth(
+  handler: ProtectedRouteHandler, 
+  allowedRoles?: ('user' | 'moderator' | 'admin' | 'super_admin')[]
+): RouteHandler {
   return async (request: NextRequest, ...args: unknown[]) => {
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('accessToken')?.value;
 
     if (!token) {
       return NextResponse.json(
@@ -21,12 +24,29 @@ export function withAuth(handler: ProtectedRouteHandler): RouteHandler {
       );
     }
 
-    const user = await authService.verifyToken(token);
+    const user = await authService.verifyAccessToken(token);
     if (!user) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized', errors: ['Access token is invalid or expired'] },
         { status: 401 }
       );
+    }
+
+    if (user.status !== 'active') {
+      return NextResponse.json(
+        { success: false, message: 'Forbidden', errors: [`Account status is ${user.status}`] },
+        { status: 403 }
+      );
+    }
+
+    // Role-Based Access Control (RBAC) validation
+    if (allowedRoles && allowedRoles.length > 0) {
+      if (!allowedRoles.includes(user.role as any)) {
+        return NextResponse.json(
+          { success: false, message: 'Forbidden', errors: ['You do not have permission to access this resource'] },
+          { status: 403 }
+        );
+      }
     }
 
     const authRequest = request as AuthenticatedNextRequest;

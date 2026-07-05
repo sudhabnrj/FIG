@@ -7,3 +7,15 @@ export const GET = withErrorHandler(
     return authController.me(request);
   })
 );
+
+export const PATCH = withErrorHandler(
+  withAuth(async (request: AuthenticatedNextRequest) => {
+    return authController.updateProfile(request);
+  })
+);
+
+export const PUT = withErrorHandler(
+  withAuth(async (request: AuthenticatedNextRequest) => {
+    return authController.changePassword(request);
+  })
+);

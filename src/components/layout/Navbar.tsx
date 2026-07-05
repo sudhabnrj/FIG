@@ -6,15 +6,45 @@ import { useSidebar } from '../../hooks/useSidebar';
 import { useQuestions } from '../../hooks/useQuestions';
 import { useTheme } from '../../hooks/useTheme';
 import { APP_CONFIG } from '../../config/app';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
+import { fetchMe, logoutUser } from '../../features/auth/authSlice';
+import { showToast } from '../../features/ui/uiSlice';
+import { useRouter } from 'next/navigation';
 
 export const Navbar: React.FC = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  
   const { localQuery, updateSearchQuery } = useSearch();
   const { openSidebar } = useSidebar();
   const { filteredQuestions } = useQuestions();
   const { theme, toggleAppTheme } = useTheme();
   
+  const { user, isAuthenticated, isInitialized } = useAppSelector((state) => state.auth);
+  
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Initialize session once
+  useEffect(() => {
+    if (!isInitialized) {
+      dispatch(fetchMe());
+    }
+  }, [dispatch, isInitialized]);
+
+  // Click outside handler for dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,11 +69,20 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const handleLogout = async () => {
+    setIsDropdownOpen(false);
+    const resultAction = await dispatch(logoutUser());
+    if (logoutUser.fulfilled.match(resultAction)) {
+      dispatch(showToast('Logged out successfully'));
+      router.push('/login');
+    }
+  };
+
   return (
     <header className="sticky top-0 z-[1020] bg-navbar backdrop-blur-[12px] border-b border-border-custom shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)] transition-all duration-300 py-2 px-3">
       <div className="container-fluid flex items-center justify-between mx-auto">
         {/* Brand Title */}
-        <a className="flex items-center no-underline text-text-primary" href="#">
+        <a className="flex items-center no-underline text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1" href="/">
           <div className="flex items-center gap-2">
             <div className="bg-primary text-white rounded p-2 flex items-center justify-center w-[38px] h-[38px]">
               <i className="fas fa-graduation-cap"></i>
@@ -57,14 +96,14 @@ export const Navbar: React.FC = () => {
         {/* Middle Controls (Search, Total Count, Theme Indicator) */}
         <div className="flex items-center gap-3">
           {/* Search Input */}
-          <div className="relative hidden md:block w-[280px]">
+          <div className="relative hidden md:block w-[220px] lg:w-[280px]">
             <i className="fas fa-search text-text-muted absolute left-3 top-1/2 -translate-y-1/2 text-[0.85rem]"></i>
             <input
               ref={searchInputRef}
               type="text"
               value={localQuery}
               onChange={(e) => updateSearchQuery(e.target.value)}
-              className="form-control w-full pl-9 pr-16 py-1 text-sm bg-white border border-border-custom rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+              className="form-control w-full pl-9 pr-16 py-1.5 text-sm bg-white border border-border-custom rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="Search Q&A... (Ctrl + F)"
             />
             <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-border-light text-text-muted text-[0.7rem] px-1.5 py-0.5 rounded border border-border-custom font-bold pointer-events-none">
@@ -83,7 +122,7 @@ export const Navbar: React.FC = () => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleAppTheme}
-            className="flex items-center text-warning hover:text-warning/80 transition-colors cursor-pointer bg-transparent border-0 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-primary select-none"
+            className="flex items-center text-warning hover:text-warning/80 transition-colors cursor-pointer bg-transparent border-0 p-1.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary select-none"
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
           >
@@ -104,10 +143,77 @@ export const Navbar: React.FC = () => {
             )}
           </button>
 
+          {/* Dynamic Authentication controls */}
+          {isAuthenticated && user ? (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-8 h-8 rounded-full overflow-hidden border border-border-custom bg-body flex items-center justify-center font-bold text-primary text-sm hover:border-primary active:scale-95 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 select-none"
+                aria-haspopup="true"
+                aria-expanded={isDropdownOpen}
+                aria-label="User profile options"
+              >
+                {user.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  user.name.charAt(0).toUpperCase()
+                )}
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-cardBg border border-border-custom rounded-xl shadow-lg py-1.5 z-[1050] backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-3.5 py-2 border-b border-border-custom">
+                    <p className="text-sm font-bold text-text-primary truncate">{user.name}</p>
+                    <p className="text-xs text-text-muted truncate">@{user.username}</p>
+                  </div>
+                  <a
+                    href="/profile"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-sm text-text-secondary hover:bg-border-light hover:text-text-primary transition-colors focus:outline-none focus:bg-border-light"
+                  >
+                    <i className="fas fa-user-circle text-text-muted w-4 text-center"></i>
+                    <span>Profile Settings</span>
+                  </a>
+                  <a
+                    href="/settings"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-sm text-text-secondary hover:bg-border-light hover:text-text-primary transition-colors focus:outline-none focus:bg-border-light"
+                  >
+                    <i className="fas fa-cog text-text-muted w-4 text-center"></i>
+                    <span>Preferences</span>
+                  </a>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left flex items-center gap-2 px-3.5 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer bg-transparent border-0 focus:outline-none focus:bg-red-500/10"
+                  >
+                    <i className="fas fa-sign-out-alt w-4 text-center"></i>
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <a
+                href="/login"
+                className="text-sm font-semibold text-text-secondary hover:text-primary transition-colors px-2.5 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+              >
+                Sign In
+              </a>
+              <a
+                href="/register"
+                className="text-sm font-semibold bg-primary hover:bg-primary-light text-white transition-colors px-3 py-1.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-sm"
+              >
+                Sign Up
+              </a>
+            </div>
+          )}
+
           {/* Mobile Sidebar Toggle */}
           <button
             onClick={openSidebar}
-            className="btn border border-border-custom hover:bg-border-light text-text-secondary py-1 px-2.5 rounded-full md:hidden flex items-center justify-center text-sm"
+            className="btn border border-border-custom hover:bg-border-light text-text-secondary py-1.5 px-2.5 rounded-full md:hidden flex items-center justify-center text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             type="button"
             aria-label="Toggle navigation"
           >

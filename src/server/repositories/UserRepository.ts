@@ -9,8 +9,28 @@ export class UserRepository {
     return User.findOne({ email }).exec();
   }
 
+  async findByUsername(username: string): Promise<IUser | null> {
+    return User.findOne({ username }).exec();
+  }
+
+  async findByVerificationToken(token: string): Promise<IUser | null> {
+    return User.findOne({ verificationToken: token }).exec();
+  }
+
+  async findByResetToken(token: string): Promise<IUser | null> {
+    return User.findOne({ resetPasswordToken: token }).exec();
+  }
+
+  async findByProvider(provider: 'google' | 'github', providerId: string): Promise<IUser | null> {
+    return User.findOne({ provider, providerId }).exec();
+  }
+
   async create(data: Partial<IUser>): Promise<IUser> {
     return User.create(data);
+  }
+
+  async update(id: string, data: Partial<IUser>): Promise<IUser | null> {
+    return User.findByIdAndUpdate(id, { $set: data }, { new: true }).exec();
   }
 }
 

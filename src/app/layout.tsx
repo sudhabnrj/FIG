@@ -3,7 +3,6 @@ import './globals.css';
 import StoreProvider from '../store/StoreProvider';
 import { ThemeProvider } from '../components/ui/ThemeProvider';
 import { Navbar } from '../components/layout/Navbar';
-import { Hero } from '../components/layout/Hero';
 import dynamic from 'next/dynamic';
 const MobileSidebar = dynamic(
   () => import('../components/layout/MobileSidebar').then((mod) => mod.MobileSidebar),
@@ -54,9 +53,6 @@ export default async function RootLayout({
             <div className="min-h-screen flex flex-col bg-body text-text-primary transition-colors duration-300">
               {/* Sticky Navbar */}
               <Navbar />
-
-              {/* Hero Banner */}
-              <Hero />
 
               {/* Main Layout and Children Page content */}
               {children}

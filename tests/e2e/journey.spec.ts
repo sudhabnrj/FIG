@@ -8,7 +8,7 @@ test.describe('Frontend Interview Guide E2E Smoke Tests', () => {
     await page.waitForTimeout(2000);
 
     // Check header/logo existence
-    const headerTitle = page.locator('header a');
+    const headerTitle = page.locator('header a').first();
     await expect(headerTitle).toBeVisible();
 
     // 2. Perform search
