@@ -291,9 +291,10 @@ export class AuthController {
     }
   }
 
-  async googleRedirect() {
+  async googleRedirect(request?: NextRequest) {
     const clientId = env.GOOGLE_CLIENT_ID;
-    const redirectUri = `${env.APP_URL}/api/v1/auth/google/callback`;
+    const baseUrl = request ? request.nextUrl.origin : env.APP_URL;
+    const redirectUri = `${baseUrl}/api/v1/auth/google/callback`;
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&response_type=code&scope=openid%20profile%20email&state=google_oauth_state`;
@@ -305,13 +306,14 @@ export class AuthController {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
     const error = searchParams.get('error');
+    const baseUrl = request.nextUrl.origin;
 
     if (error) {
-      return NextResponse.redirect(`${env.APP_URL}/login?error=${encodeURIComponent(error)}`);
+      return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(error)}`);
     }
 
     if (!code) {
-      return NextResponse.redirect(`${env.APP_URL}/login?error=oauth_code_missing`);
+      return NextResponse.redirect(`${baseUrl}/login?error=oauth_code_missing`);
     }
 
     try {
@@ -322,7 +324,7 @@ export class AuthController {
           client_id: env.GOOGLE_CLIENT_ID,
           client_secret: env.GOOGLE_CLIENT_SECRET,
           code,
-          redirect_uri: `${env.APP_URL}/api/v1/auth/google/callback`,
+          redirect_uri: `${baseUrl}/api/v1/auth/google/callback`,
           grant_type: 'authorization_code',
         }),
       });
@@ -348,7 +350,7 @@ export class AuthController {
         avatar: userData.picture,
       });
 
-      const response = NextResponse.redirect(`${env.APP_URL}/profile`);
+      const response = NextResponse.redirect(`${baseUrl}/profile`);
       const isProd = env.NODE_ENV === 'production';
       const accessCookie = getCookieOptions('access', isProd);
       const refreshCookie = getCookieOptions('refresh', isProd);
@@ -372,13 +374,14 @@ export class AuthController {
       return response;
     } catch (e: any) {
       console.error('Google OAuth Callback Error:', e);
-      return NextResponse.redirect(`${env.APP_URL}/login?error=${encodeURIComponent(e.message || 'google_oauth_failed')}`);
+      return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(e.message || 'google_oauth_failed')}`);
     }
   }
 
-  async githubRedirect() {
+  async githubRedirect(request?: NextRequest) {
     const clientId = env.GITHUB_CLIENT_ID;
-    const redirectUri = `${env.APP_URL}/api/v1/auth/github/callback`;
+    const baseUrl = request ? request.nextUrl.origin : env.APP_URL;
+    const redirectUri = `${baseUrl}/api/v1/auth/github/callback`;
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&scope=read:user%20user:email&state=github_oauth_state`;
@@ -390,13 +393,14 @@ export class AuthController {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
     const error = searchParams.get('error');
+    const baseUrl = request.nextUrl.origin;
 
     if (error) {
-      return NextResponse.redirect(`${env.APP_URL}/login?error=${encodeURIComponent(error)}`);
+      return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(error)}`);
     }
 
     if (!code) {
-      return NextResponse.redirect(`${env.APP_URL}/login?error=oauth_code_missing`);
+      return NextResponse.redirect(`${baseUrl}/login?error=oauth_code_missing`);
     }
 
     try {
@@ -405,12 +409,13 @@ export class AuthController {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
+          'User-Agent': 'frontend-interview-guide-oauth'
         },
         body: JSON.stringify({
           client_id: env.GITHUB_CLIENT_ID,
           client_secret: env.GITHUB_CLIENT_SECRET,
           code,
-          redirect_uri: `${env.APP_URL}/api/v1/auth/github/callback`,
+          redirect_uri: `${baseUrl}/api/v1/auth/github/callback`,
         }),
       });
 
@@ -457,7 +462,7 @@ export class AuthController {
         avatar: userData.avatar_url,
       });
 
-      const response = NextResponse.redirect(`${env.APP_URL}/profile`);
+      const response = NextResponse.redirect(`${baseUrl}/profile`);
       const isProd = env.NODE_ENV === 'production';
       const accessCookie = getCookieOptions('access', isProd);
       const refreshCookie = getCookieOptions('refresh', isProd);
@@ -481,7 +486,7 @@ export class AuthController {
       return response;
     } catch (e: any) {
       console.error('GitHub OAuth Callback Error:', e);
-      return NextResponse.redirect(`${env.APP_URL}/login?error=${encodeURIComponent(e.message || 'github_oauth_failed')}`);
+      return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(e.message || 'github_oauth_failed')}`);
     }
   }
 

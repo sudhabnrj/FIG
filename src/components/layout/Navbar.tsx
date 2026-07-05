@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { fetchMe, logoutUser } from '../../features/auth/authSlice';
 import { showToast } from '../../features/ui/uiSlice';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
@@ -82,7 +83,7 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-[1020] bg-navbar backdrop-blur-[12px] border-b border-border-custom shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)] transition-all duration-300 py-2 px-3">
       <div className="container-fluid flex items-center justify-between mx-auto">
         {/* Brand Title */}
-        <a className="flex items-center no-underline text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1" href="/">
+        <Link className="flex items-center no-underline text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1" href="/">
           <div className="flex items-center gap-2">
             <div className="bg-primary text-white rounded p-2 flex items-center justify-center w-[38px] h-[38px]">
               <i className="fas fa-graduation-cap"></i>
@@ -91,7 +92,7 @@ export const Navbar: React.FC = () => {
               {APP_CONFIG.title}
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Middle Controls (Search, Total Count, Theme Indicator) */}
         <div className="flex items-center gap-3">
@@ -167,22 +168,22 @@ export const Navbar: React.FC = () => {
                     <p className="text-sm font-bold text-text-primary truncate">{user.name}</p>
                     <p className="text-xs text-text-muted truncate">@{user.username}</p>
                   </div>
-                  <a
+                  <Link
                     href="/profile"
                     onClick={() => setIsDropdownOpen(false)}
                     className="flex items-center gap-2 px-3.5 py-2 text-sm text-text-secondary hover:bg-border-light hover:text-text-primary transition-colors focus:outline-none focus:bg-border-light"
                   >
                     <i className="fas fa-user-circle text-text-muted w-4 text-center"></i>
                     <span>Profile Settings</span>
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/settings"
                     onClick={() => setIsDropdownOpen(false)}
                     className="flex items-center gap-2 px-3.5 py-2 text-sm text-text-secondary hover:bg-border-light hover:text-text-primary transition-colors focus:outline-none focus:bg-border-light"
                   >
                     <i className="fas fa-cog text-text-muted w-4 text-center"></i>
                     <span>Preferences</span>
-                  </a>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left flex items-center gap-2 px-3.5 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer bg-transparent border-0 focus:outline-none focus:bg-red-500/10"
@@ -195,18 +196,18 @@ export const Navbar: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <a
+              <Link
                 href="/login"
                 className="text-sm font-semibold text-text-secondary hover:text-primary transition-colors px-2.5 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
               >
                 Sign In
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/register"
                 className="text-sm font-semibold bg-primary hover:bg-primary-light text-white transition-colors px-3 py-1.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-sm"
               >
                 Sign Up
-              </a>
+              </Link>
             </div>
           )}
 
