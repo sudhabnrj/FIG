@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { registerUser, clearAuthError } from '../../features/auth/authSlice';
 import { showToast } from '../../features/ui/uiSlice';
+import Link from 'next/link';
 
 export const RegisterForm: React.FC = () => {
   const router = useRouter();
@@ -280,9 +281,9 @@ export const RegisterForm: React.FC = () => {
 
       <div className="text-center text-sm text-text-muted">
         Already have an account?{' '}
-        <a href="/login" className="text-primary font-bold hover:underline">
+        <Link href="/login" className="text-primary font-bold hover:underline">
           Login
-        </a>
+        </Link>
       </div>
     </div>
   );

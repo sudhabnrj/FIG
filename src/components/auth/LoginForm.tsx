@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { loginUser, clearAuthError } from '../../features/auth/authSlice';
 import { showToast } from '../../features/ui/uiSlice';
+import Link from 'next/link';
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -108,9 +109,9 @@ export const LoginForm: React.FC = () => {
             <label htmlFor="password" className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
               Password
             </label>
-            <a href="/forgot-password" className="text-xs text-primary font-semibold hover:underline">
+            <Link href="/forgot-password" className="text-xs text-primary font-semibold hover:underline">
               Forgot password?
-            </a>
+            </Link>
           </div>
           <div className="relative">
             <i className="fas fa-lock text-text-muted absolute left-3 top-1/2 -translate-y-1/2 text-sm"></i>
@@ -178,9 +179,9 @@ export const LoginForm: React.FC = () => {
 
       <div className="text-center text-sm text-text-muted">
         Don&apos;t have an account?{' '}
-        <a href="/register" className="text-primary font-bold hover:underline">
+        <Link href="/register" className="text-primary font-bold hover:underline">
           Sign up
-        </a>
+        </Link>
       </div>
     </div>
   );
