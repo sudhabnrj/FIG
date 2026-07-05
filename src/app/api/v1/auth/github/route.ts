@@ -3,5 +3,6 @@ import { authController } from '../../../../../server/controllers/AuthController
 import { withErrorHandler } from '../../../../../server/middlewares/errorHandler';
 
 export const GET = withErrorHandler(async (request: NextRequest) => {
-  return authController.githubRedirect();
+  return authController.githubRedirect(request);
 });
+
