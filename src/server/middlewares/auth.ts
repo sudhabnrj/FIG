@@ -16,15 +16,38 @@ export function withAuth(
 ): RouteHandler {
   return async (request: NextRequest, ...args: unknown[]) => {
     const token = request.cookies.get('accessToken')?.value;
+    const userRepoImport = await import('../repositories/UserRepository');
+    const userRepository = userRepoImport.userRepository;
+    const { verifyJwt } = await import('../../lib/auth/jwt');
 
-    if (!token) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized', errors: ['Access token is missing'] },
-        { status: 401 }
-      );
+    let user: IUser | null = null;
+    let newAccessToken: string | null = null;
+    let newRefreshToken: string | null = null;
+
+    if (token) {
+      user = await authService.verifyAccessToken(token);
     }
 
-    const user = await authService.verifyAccessToken(token);
+    if (!user) {
+      const refreshToken = request.cookies.get('refreshToken')?.value;
+      if (refreshToken) {
+        try {
+          const decoded = await verifyJwt(refreshToken, process.env.JWT_REFRESH_SECRET || 'placeholder_jwt_refresh_secret');
+          if (decoded && decoded.userId) {
+            const potentialUser = await userRepository.findById(decoded.userId);
+            if (potentialUser && potentialUser.status === 'active') {
+              const refreshed = await authService.refreshTokens(refreshToken);
+              user = potentialUser;
+              newAccessToken = refreshed.accessToken;
+              newRefreshToken = refreshed.refreshToken;
+            }
+          }
+        } catch (e) {
+          // Token refresh failed
+        }
+      }
+    }
+
     if (!user) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized', errors: ['Access token is invalid or expired'] },
@@ -52,6 +75,31 @@ export function withAuth(
     const authRequest = request as AuthenticatedNextRequest;
     authRequest.user = user;
 
-    return handler(authRequest, ...args);
+    const response = await handler(authRequest, ...args);
+
+    if (newAccessToken && newRefreshToken) {
+      const isProd = process.env.NODE_ENV === 'production';
+      const { getCookieOptions } = await import('../../lib/auth/cookies');
+      const accessCookie = getCookieOptions('access', isProd);
+      const refreshCookie = getCookieOptions('refresh', isProd);
+
+      response.cookies.set('accessToken', newAccessToken, {
+        httpOnly: accessCookie.httpOnly,
+        secure: accessCookie.secure,
+        sameSite: accessCookie.sameSite,
+        maxAge: accessCookie.maxAge,
+        path: accessCookie.path,
+      });
+
+      response.cookies.set('refreshToken', newRefreshToken, {
+        httpOnly: refreshCookie.httpOnly,
+        secure: refreshCookie.secure,
+        sameSite: refreshCookie.sameSite,
+        maxAge: refreshCookie.maxAge,
+        path: refreshCookie.path,
+      });
+    }
+
+    return response;
   };
 }
