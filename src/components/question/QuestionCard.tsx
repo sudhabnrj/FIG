@@ -188,6 +188,37 @@ export const QuestionCard = memo(({ question }: QuestionCardProps) => {
           </button>
         </div>
 
+        {/* Author Attribution */}
+        {question.authorId && (
+          <div className="mt-4 pt-3.5 border-t border-border-light flex items-center justify-between gap-4 text-xs text-text-muted">
+            <div className="flex items-center gap-2.5 text-left">
+              <div className="w-6 h-6 rounded-full overflow-hidden bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-[10px]">
+                {question.authorId.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={question.authorId.avatar} alt={question.authorId.name} className="w-full h-full object-cover" />
+                ) : (
+                  question.authorId.name.charAt(0).toUpperCase()
+                )}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[11px] font-bold text-text-primary">
+                  Asked by {question.authorId.name} (@{question.authorId.username})
+                </span>
+                {question.createdAt && (
+                  <span className="text-[10px] text-text-muted">
+                    Published {new Date(question.createdAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                  </span>
+                )}
+              </div>
+            </div>
+            {question.updatedAt && question.updatedAt !== question.createdAt && (
+              <span className="text-[9px] uppercase tracking-wider font-bold text-text-muted hidden sm:inline">
+                Updated: {new Date(question.updatedAt).toLocaleDateString()}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Collapsible Answer Body */}
         <div
           id={`answer-${question.id}`}

@@ -13,9 +13,7 @@ export const questionValidator = z.object({
   question: z
     .string()
     .min(100, 'Question description must be at least 100 characters'),
-  answer: z
-    .string()
-    .min(20, 'Answer expectation must be at least 20 characters'),
+  answer: z.string().optional().default(''),
   category: z
     .string()
     .min(1, 'Category is required'),

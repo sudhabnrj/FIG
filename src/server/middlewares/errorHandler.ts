@@ -24,6 +24,13 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
         );
       }
 
+      if (error.message === 'Question already exists.' || error.message === 'Category already exists.') {
+        return NextResponse.json(
+          { success: false, message: error.message, errors: [error.message] },
+          { status: 400 }
+        );
+      }
+
       if (error.name === 'ValidationError') {
         const messages = Object.values(error.errors).map((e: any) => e.message);
         return NextResponse.json(

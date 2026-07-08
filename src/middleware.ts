@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 2. Route Protection & Token Refresh
-  const isProtectedRoute = pathname.startsWith('/profile') || pathname.startsWith('/settings') || pathname.startsWith('/dashboard') || pathname.startsWith('/community');
+  const isProtectedRoute = pathname.startsWith('/profile') || pathname.startsWith('/settings') || pathname.startsWith('/dashboard') || pathname.startsWith('/community/review');
   const isAuthRoute = pathname === '/login' || pathname === '/register' || pathname === '/forgot-password' || pathname === '/reset-password';
 
   const jwtSecret = process.env.JWT_SECRET || 'placeholder_jwt_secret_value';

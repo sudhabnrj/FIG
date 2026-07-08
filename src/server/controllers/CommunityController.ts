@@ -87,6 +87,18 @@ export class CommunityController {
     const { reviewId, action, notes } = reviewActionValidator.parse(body);
 
     const review = await communityService.performReview(reviewId, action, request.user._id.toString(), notes);
+
+    try {
+      const { revalidatePath } = await import('next/cache');
+      revalidatePath('/admin/questions');
+      revalidatePath('/admin/answers');
+      revalidatePath('/admin/dashboard');
+      revalidatePath('/community');
+      revalidatePath('/');
+    } catch (e) {
+      console.error('Failed to revalidate cache paths:', e);
+    }
+
     return NextResponse.json({ success: true, data: review });
   }
 

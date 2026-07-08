@@ -23,11 +23,25 @@ export class CommunityService {
   }
 
   async createQuestion(data: any, authorId: string): Promise<IQuestion> {
-    // 1. Assign sequential integer id
+    const cleanTitle = (data.title || '').trim();
+    const cleanQuestion = (data.question || '').replace(/<[^>]*>/g, '').trim();
+
+    if (cleanTitle) {
+      const existingTitle = await Question.findOne({
+        title: { $regex: new RegExp('^' + cleanTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i') }
+      }).exec();
+      if (existingTitle) throw new Error('Question already exists.');
+    }
+    if (cleanQuestion) {
+      const existingQuestion = await Question.findOne({
+        question: { $regex: new RegExp('^' + cleanQuestion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i') }
+      }).exec();
+      if (existingQuestion) throw new Error('Question already exists.');
+    }
+
     const maxQuestion = await Question.findOne().sort({ id: -1 }).exec();
     const nextId = maxQuestion ? maxQuestion.id + 1 : 1;
 
-    // 2. Validate category exists, or suggest it
     const slug = data.title
       ? data.title
           .toLowerCase()
@@ -38,8 +52,10 @@ export class CommunityService {
           .slice(0, 80)
       : `question-${nextId}`;
 
+    const { subCategory, answer, ...cleanData } = data;
+
     const newQuestion = new Question({
-      ...data,
+      ...cleanData,
       id: nextId,
       slug,
       authorId,
@@ -51,7 +67,6 @@ export class CommunityService {
 
     const savedQuestion = await newQuestion.save();
 
-    // 3. Register a Version
     await Version.create({
       entityType: 'question',
       entityId: savedQuestion._id,
@@ -60,11 +75,9 @@ export class CommunityService {
         title: savedQuestion.title,
         summary: savedQuestion.summary,
         category: savedQuestion.category,
-        subCategory: savedQuestion.subCategory,
         difficulty: savedQuestion.difficulty,
         tags: savedQuestion.tags,
         attachments: savedQuestion.attachments,
-        answer: savedQuestion.answer,
       },
       authorId,
       versionNumber: 1,
@@ -88,7 +101,24 @@ export class CommunityService {
     const question = await Question.findById(id);
     if (!question) throw new Error('Question not found');
 
-    // Increment version
+    const cleanTitle = (data.title || '').trim();
+    const cleanQuestion = (data.question || '').replace(/<[^>]*>/g, '').trim();
+
+    if (cleanTitle) {
+      const existingTitle = await Question.findOne({
+        _id: { $ne: id },
+        title: { $regex: new RegExp('^' + cleanTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i') }
+      }).exec();
+      if (existingTitle) throw new Error('Question already exists.');
+    }
+    if (cleanQuestion) {
+      const existingQuestion = await Question.findOne({
+        _id: { $ne: id },
+        question: { $regex: new RegExp('^' + cleanQuestion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i') }
+      }).exec();
+      if (existingQuestion) throw new Error('Question already exists.');
+    }
+
     const newVersionNumber = (question.version || 1) + 1;
 
     const updated = await Question.findByIdAndUpdate(
@@ -97,9 +127,7 @@ export class CommunityService {
         $set: {
           title: data.title,
           question: data.question,
-          answer: data.answer,
           category: data.category,
-          subCategory: data.subCategory,
           difficulty: data.difficulty,
           tags: data.tags,
           summary: data.summary,
@@ -114,7 +142,6 @@ export class CommunityService {
     ).exec();
 
     if (updated) {
-      // Register version
       await Version.create({
         entityType: 'question',
         entityId: updated._id,
@@ -123,11 +150,9 @@ export class CommunityService {
           title: updated.title,
           summary: updated.summary,
           category: updated.category,
-          subCategory: updated.subCategory,
           difficulty: updated.difficulty,
           tags: updated.tags,
           attachments: updated.attachments,
-          answer: updated.answer,
         },
         authorId,
         versionNumber: newVersionNumber,

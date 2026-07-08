@@ -4,7 +4,7 @@ export interface IQuestion extends Document {
   id: number;
   category: string;
   question: string;
-  answer: string;
+  answer?: string;
   diagrams: string[];
   title?: string;
   slug?: string;
@@ -31,7 +31,7 @@ const QuestionSchema: Schema = new Schema(
     id: { type: Number, required: true, unique: true, index: true },
     category: { type: String, required: true, index: true },
     question: { type: String, required: true },
-    answer: { type: String, required: true },
+    answer: { type: String, default: '' },
     diagrams: { type: [String], default: [] },
     title: { type: String },
     slug: { type: String, index: true },
