@@ -241,7 +241,7 @@ export default function AdminUsersPage() {
                 {new Date(u.createdAt).toLocaleDateString()}
               </td>
               <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
-                {u.role !== 'super_admin' && (
+                {u.role !== 'admin' && u.role !== 'super_admin' && (
                   <>
                     <button
                       onClick={() => { setSelectedUser(u); setNewRole(u.role); setShowRoleModal(true); }}
@@ -259,21 +259,25 @@ export default function AdminUsersPage() {
                     >
                       {u.status === 'active' ? <UserX className="h-4.5 w-4.5" /> : <UserCheck className="h-4.5 w-4.5" />}
                     </button>
-                    <button
-                      onClick={() => { setSelectedUser(u); setShowPasswordModal(true); }}
-                      className="p-1.5 text-blue-400 hover:bg-blue-500/10 rounded bg-transparent border-0 cursor-pointer text-xs"
-                      title="Reset Password"
-                    >
-                      <Key className="h-4.5 w-4.5" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(u._id)}
-                      className="p-1.5 text-red-400 hover:bg-red-500/10 rounded bg-transparent border-0 cursor-pointer text-xs"
-                      title="Delete User"
-                    >
-                      <Trash2 className="h-4.5 w-4.5" />
-                    </button>
                   </>
+                )}
+                
+                <button
+                  onClick={() => { setSelectedUser(u); setShowPasswordModal(true); }}
+                  className="p-1.5 text-blue-400 hover:bg-blue-500/10 rounded bg-transparent border-0 cursor-pointer text-xs"
+                  title="Reset Password"
+                >
+                  <Key className="h-4.5 w-4.5" />
+                </button>
+
+                {u.role !== 'admin' && u.role !== 'super_admin' && (
+                  <button
+                    onClick={() => handleDelete(u._id)}
+                    className="p-1.5 text-red-400 hover:bg-red-500/10 rounded bg-transparent border-0 cursor-pointer text-xs"
+                    title="Delete User"
+                  >
+                    <Trash2 className="h-4.5 w-4.5" />
+                  </button>
                 )}
               </td>
             </tr>
