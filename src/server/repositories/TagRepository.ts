@@ -12,6 +12,19 @@ export class TagRepository {
   async create(data: Partial<ITag>): Promise<ITag> {
     return Tag.create(data);
   }
+
+  async findById(id: string): Promise<ITag | null> {
+    return Tag.findById(id).exec();
+  }
+
+  async update(id: string, data: Partial<ITag>): Promise<ITag | null> {
+    return Tag.findByIdAndUpdate(id, { $set: data }, { new: true }).exec();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const res = await Tag.findByIdAndDelete(id).exec();
+    return res !== null;
+  }
 }
 
 export const tagRepository = new TagRepository();

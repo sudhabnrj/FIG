@@ -6,9 +6,9 @@ export interface AuthenticatedNextRequest extends NextRequest {
   user: IUser;
 }
 
-type ProtectedRouteHandler = (request: AuthenticatedNextRequest, ...args: unknown[]) => Promise<NextResponse>;
+type ProtectedRouteHandler = (request: AuthenticatedNextRequest, ...args: any[]) => Promise<NextResponse>;
 
-type RouteHandler = (request: NextRequest, ...args: unknown[]) => Promise<NextResponse>;
+type RouteHandler = (request: NextRequest, ...args: any[]) => Promise<NextResponse>;
 
 export function withAuth(
   handler: ProtectedRouteHandler, 

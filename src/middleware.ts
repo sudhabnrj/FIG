@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 2. Route Protection & Token Refresh
-  const isProtectedRoute = pathname.startsWith('/profile') || pathname.startsWith('/settings') || pathname.startsWith('/dashboard');
+  const isProtectedRoute = pathname.startsWith('/profile') || pathname.startsWith('/settings') || pathname.startsWith('/dashboard') || pathname.startsWith('/community/review');
   const isAuthRoute = pathname === '/login' || pathname === '/register' || pathname === '/forgot-password' || pathname === '/reset-password';
 
   const jwtSecret = process.env.JWT_SECRET || 'placeholder_jwt_secret_value';
@@ -123,5 +123,5 @@ function applyHeaders(request: NextRequest, response: NextResponse) {
 
 export const config = {
   // Check rate limits on API and check auth on views/APIs
-  matcher: ['/api/:path*', '/profile/:path*', '/profile', '/settings/:path*', '/settings', '/dashboard/:path*', '/dashboard', '/login', '/register', '/forgot-password', '/reset-password'],
+  matcher: ['/api/:path*', '/profile/:path*', '/profile', '/settings/:path*', '/settings', '/dashboard/:path*', '/dashboard', '/community/:path*', '/community', '/login', '/register', '/forgot-password', '/reset-password'],
 };

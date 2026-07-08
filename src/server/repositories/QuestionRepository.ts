@@ -18,11 +18,11 @@ export interface GetQuestionsOptions {
 
 export class QuestionRepository {
   async findById(id: number): Promise<IQuestion | null> {
-    return Question.findOne({ id }).exec();
+    return Question.findOne({ id }).populate('authorId', 'name username avatar').exec();
   }
 
   async findBySlug(slug: string): Promise<IQuestion | null> {
-    return Question.findOne({ slug }).exec();
+    return Question.findOne({ slug }).populate('authorId', 'name username avatar').exec();
   }
 
   async create(data: Partial<IQuestion>): Promise<IQuestion> {
@@ -107,6 +107,7 @@ export class QuestionRepository {
 
     const total = await Question.countDocuments(query).exec();
     const questions = await Question.find(query)
+      .populate('authorId', 'name username avatar')
       .sort(sortObj)
       .skip(skip)
       .limit(limit)

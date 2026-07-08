@@ -6,6 +6,9 @@ export interface ICategory extends Document {
   description?: string;
   icon?: string;
   order: number;
+  questionCount: number;
+  createdBy?: mongoose.Types.ObjectId | string;
+  status: 'active' | 'inactive';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +20,9 @@ const CategorySchema: Schema = new Schema(
     description: { type: String },
     icon: { type: String },
     order: { type: Number, default: 0 },
+    questionCount: { type: Number, default: 0 },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    status: { type: String, enum: ['active', 'inactive'], default: 'active', index: true },
   },
   { timestamps: true }
 );

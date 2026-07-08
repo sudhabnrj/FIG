@@ -17,6 +17,14 @@ export interface IUser extends Document {
   resetPasswordToken?: string;
   resetPasswordTokenExpires?: Date;
   lastLogin?: Date;
+  bio?: string;
+  location?: string;
+  website?: string;
+  github?: string;
+  linkedin?: string;
+  skills?: string[];
+  experience?: string;
+  coverImage?: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -64,6 +72,14 @@ const UserSchema: Schema = new Schema(
     resetPasswordToken: { type: String },
     resetPasswordTokenExpires: { type: Date },
     lastLogin: { type: Date },
+    bio: { type: String, default: '' },
+    location: { type: String, default: '' },
+    website: { type: String, default: '' },
+    github: { type: String, default: '' },
+    linkedin: { type: String, default: '' },
+    skills: { type: [String], default: [] },
+    experience: { type: String, default: '' },
+    coverImage: { type: String, default: '' },
   },
   { timestamps: true }
 );

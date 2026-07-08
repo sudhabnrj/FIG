@@ -294,7 +294,7 @@ export class AuthController {
   async googleRedirect(request?: NextRequest) {
     const clientId = env.GOOGLE_CLIENT_ID;
     const baseUrl = request ? request.nextUrl.origin : env.APP_URL;
-    const redirectUri = `${baseUrl}/api/v1/auth/google/callback`;
+    const redirectUri = `${baseUrl}/api/v1/auth/callback/google`;
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&response_type=code&scope=openid%20profile%20email&state=google_oauth_state`;
@@ -324,7 +324,7 @@ export class AuthController {
           client_id: env.GOOGLE_CLIENT_ID,
           client_secret: env.GOOGLE_CLIENT_SECRET,
           code,
-          redirect_uri: `${baseUrl}/api/v1/auth/google/callback`,
+          redirect_uri: `${baseUrl}/api/v1/auth/callback/google`,
           grant_type: 'authorization_code',
         }),
       });
@@ -381,7 +381,7 @@ export class AuthController {
   async githubRedirect(request?: NextRequest) {
     const clientId = env.GITHUB_CLIENT_ID;
     const baseUrl = request ? request.nextUrl.origin : env.APP_URL;
-    const redirectUri = `${baseUrl}/api/v1/auth/github/callback`;
+    const redirectUri = `${baseUrl}/api/v1/auth/callback/github`;
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&scope=read:user%20user:email&state=github_oauth_state`;
@@ -415,7 +415,7 @@ export class AuthController {
           client_id: env.GITHUB_CLIENT_ID,
           client_secret: env.GITHUB_CLIENT_SECRET,
           code,
-          redirect_uri: `${baseUrl}/api/v1/auth/github/callback`,
+          redirect_uri: `${baseUrl}/api/v1/auth/callback/github`,
         }),
       });
 

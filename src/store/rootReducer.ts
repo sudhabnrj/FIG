@@ -5,6 +5,7 @@ import searchReducer from '../features/search/searchSlice';
 import themeReducer from '../features/theme/themeSlice';
 import uiReducer from '../features/ui/uiSlice';
 import authReducer from '../features/auth/authSlice';
+import communityReducer from '../features/community/communitySlice';
 
 const rootReducer = combineReducers({
   questions: questionsReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   ui: uiReducer,
   auth: authReducer,
+  community: communityReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

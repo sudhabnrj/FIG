@@ -27,6 +27,48 @@ export default function QuestionContainer({ initialQuestions }: QuestionContaine
   const { query, localQuery, updateSearchQuery } = useSearch();
   const { filteredQuestions, groupedQuestions, isLoading, error } = useQuestions();
 
+  // Handle scrolling and expanding when target question parameter is in the URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const qIdStr = params.get('question');
+      if (qIdStr) {
+        const qId = parseInt(qIdStr, 10);
+        if (!isNaN(qId)) {
+          const timer = setTimeout(() => {
+            const cardElement = document.getElementById(`card-${qId}`);
+            if (cardElement) {
+              // Target expansion button inside card
+              const button = cardElement.querySelector(`button[aria-controls="answer-${qId}"]`) as HTMLButtonElement | null;
+              if (button) {
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                if (!isExpanded) {
+                  button.click();
+                }
+              }
+              
+              // Smooth scroll to card location
+              const elementPosition = cardElement.getBoundingClientRect().top + window.scrollY;
+              const offsetPosition = elementPosition - 100;
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth',
+              });
+
+              // Apply a flash focus visual effect
+              cardElement.classList.add('ring-4', 'ring-primary/40');
+              const flashTimer = setTimeout(() => {
+                cardElement.classList.remove('ring-4', 'ring-primary/40');
+              }, 3000);
+              return () => clearTimeout(flashTimer);
+            }
+          }, 600);
+          return () => clearTimeout(timer);
+        }
+      }
+    }
+  }, [filteredQuestions]);
+
   return (
     <section className="col-md-8 col-xl-8 flex-1 main-column">
       {/* Mobile Search input */}

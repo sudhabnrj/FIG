@@ -9,23 +9,24 @@ import { APP_CONFIG } from '../../config/app';
 import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { fetchMe, logoutUser } from '../../features/auth/authSlice';
 import { showToast } from '../../features/ui/uiSlice';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
-  
+
   const { localQuery, updateSearchQuery } = useSearch();
   const { openSidebar } = useSidebar();
   const { filteredQuestions } = useQuestions();
   const { theme, toggleAppTheme } = useTheme();
-  
+
   const { user, isAuthenticated, isInitialized } = useAppSelector((state) => state.auth);
-  
+
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -82,17 +83,34 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-[1020] bg-navbar backdrop-blur-[12px] border-b border-border-custom shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)] transition-all duration-300 py-2 px-3">
       <div className="container-fluid flex items-center justify-between mx-auto">
-        {/* Brand Title */}
-        <Link className="flex items-center no-underline text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1" href="/">
-          <div className="flex items-center gap-2">
-            <div className="bg-primary text-white rounded p-2 flex items-center justify-center w-[38px] h-[38px]">
-              <i className="fas fa-graduation-cap"></i>
+        {/* Brand Title and Primary Nav */}
+        <div className="flex items-center gap-3 md:gap-5">
+          <Link className="flex items-center no-underline text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1" href="/">
+            <div className="flex items-center gap-2">
+              <div className="bg-primary text-white rounded p-2 flex items-center justify-center w-[38px] h-[38px]">
+                <i className="fas fa-graduation-cap"></i>
+              </div>
+              <span className="text-xl font-bold tracking-tight hidden md:flex">
+                {APP_CONFIG.title}
+              </span>
             </div>
-            <span className="text-xl font-bold tracking-tight hidden md:flex">
-              {APP_CONFIG.title}
-            </span>
-          </div>
-        </Link>
+          </Link>
+
+          <nav className="flex items-center" aria-label="Primary Navigation">
+            {isAuthenticated && (user?.role === 'admin' || user?.role === 'super_admin') && (
+              <Link
+                href="/admin/dashboard"
+                className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all no-underline ${
+                  pathname.startsWith('/admin')
+                    ? 'bg-[#ef4444] text-white'
+                    : 'text-text-muted hover:text-text-primary hover:bg-border-light'
+                }`}
+              >
+                Admin Control
+              </Link>
+            )}
+          </nav>
+        </div>
 
         {/* Middle Controls (Search, Total Count, Theme Indicator) */}
         <div className="flex items-center gap-3">
@@ -110,14 +128,6 @@ export const Navbar: React.FC = () => {
             <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-border-light text-text-muted text-[0.7rem] px-1.5 py-0.5 rounded border border-border-custom font-bold pointer-events-none">
               Ctrl+F
             </kbd>
-          </div>
-
-          {/* Total Questions count */}
-          <div className="flex items-center bg-white border border-border-custom rounded-full px-3 py-1 text-text-muted font-semibold text-[0.85rem] shadow-sm">
-            <span className="mr-1">Total:</span>
-            <span className="badge bg-primary text-white rounded-full px-2 py-0.5 text-[0.75rem] font-bold">
-              {filteredQuestions.length}
-            </span>
           </div>
 
           {/* Theme Toggle Button */}
@@ -198,18 +208,31 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className="text-sm font-semibold text-text-secondary hover:text-primary transition-colors px-2.5 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+                className="text-sm font-semibold text-text-secondary hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary px-4 py-2 rounded-[4px]"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="text-sm font-semibold bg-primary hover:bg-primary-light text-white transition-colors px-3 py-1.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-sm"
+                className="text-sm font-semibold bg-primary hover:bg-primary-light text-white transition-colors px-4 py-2 rounded-[4px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-sm"
               >
                 Sign Up
               </Link>
             </div>
           )}
+
+          {/* community */}
+          <div className="flex items-center text-text-muted font-semibold text-[0.85rem] shadow-sm">
+            <Link
+              href="/community"
+              className={`text-xs md:text-sm bg-black text-white font-semibold px-4 py-2 rounded-[4px] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary select-none ${pathname.startsWith('/community')
+                ? 'bg-primary text-white hover:bg-primary/95 shadow-sm font-bold'
+                : 'text-text-secondary hover:bg-border-light hover:text-primary active:scale-95'
+                }`}
+            >
+              Go To Community
+            </Link>
+          </div>
 
           {/* Mobile Sidebar Toggle */}
           <button
