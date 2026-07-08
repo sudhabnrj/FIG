@@ -54,10 +54,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!isInitialized) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#070a13]">
+      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#ef4444] border-t-transparent"></div>
-          <span className="text-sm font-semibold text-slate-400">Loading System Controller...</span>
+          <span className="text-sm font-semibold text-slate-500">Loading System Controller...</span>
         </div>
       </div>
     );
@@ -71,10 +71,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!hasAdminAccess) {
     return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center bg-[#070a13] text-center p-6 text-slate-200">
+      <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-50 text-center p-6 text-slate-700">
         <ShieldAlert className="h-16 w-16 text-[#ef4444] mb-4 animate-bounce" />
-        <h1 className="text-2xl font-bold text-white">403 - Forbidden</h1>
-        <p className="text-slate-400 mt-2 max-w-md">You do not have administrative privileges to access this area.</p>
+        <h1 className="text-2xl font-bold text-slate-800">403 - Forbidden</h1>
+        <p className="text-slate-500 mt-2 max-w-md">You do not have administrative privileges to access this area.</p>
         <button
           onClick={() => router.push('/dashboard')}
           className="mt-6 px-5 py-2.5 bg-[#ef4444] hover:bg-[#dc2626] text-white rounded-lg font-bold transition-all border-0 cursor-pointer shadow-lg shadow-[#ef4444]/20"
@@ -86,7 +86,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#070a13] font-sans text-slate-100">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
       {/* Collapsible Sidebar */}
       <AdminSidebar
         isOpen={sidebarOpen}
@@ -107,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         />
 
         {/* Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-[#070a13]">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-50">
           <div className="mx-auto max-w-7xl">
             {children}
           </div>

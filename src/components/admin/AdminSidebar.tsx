@@ -42,13 +42,13 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-[#0b0f19] border-r border-[#1e293b] text-slate-300 transition-all duration-300 ${
+      className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 text-slate-600 transition-all duration-300 ${
         isOpen ? 'w-64' : 'w-0 lg:w-20'
       } ${isMobile && !isOpen ? '-translate-x-full' : 'translate-x-0'}`}
     >
       {/* Brand */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-[#1e293b] bg-slate-950/20">
-        <Link href="/" className="flex items-center gap-2 font-bold text-white no-underline">
+      <div className="flex h-16 items-center justify-between px-4 border-b border-slate-200 bg-slate-50">
+        <Link href="/" className="flex items-center gap-2 font-bold text-slate-800 no-underline">
           <div className="bg-[#ef4444] text-white p-2 rounded-lg flex items-center justify-center h-9 w-9 shadow-lg shadow-[#ef4444]/20">
             <Shield className="h-5 w-5" />
           </div>
@@ -57,7 +57,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
         {isMobile && (
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white bg-transparent border-0 cursor-pointer text-lg p-1.5 hover:bg-slate-800 rounded-lg"
+            className="text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer text-lg p-1.5 hover:bg-slate-100 rounded-lg"
           >
             <X className="h-5 w-5" />
           </button>
@@ -77,7 +77,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 no-underline ${
                 isActive
                   ? 'bg-[#ef4444] text-white shadow-md shadow-[#ef4444]/15'
-                  : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
               title={item.name}
             >
@@ -90,8 +90,8 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
 
       {/* Footer Info */}
       {isOpen && (
-        <div className="p-4 border-t border-[#1e293b] bg-slate-950/10">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#ef4444] bg-[#ef4444]/10 rounded-lg px-2.5 py-1.5">
+        <div className="p-4 border-t border-slate-200 bg-slate-50">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#ef4444] bg-[#ef4444]/10 rounded-lg px-2.5 py-1.5 justify-center">
             <span className="h-2 w-2 rounded-full bg-[#ef4444] animate-ping"></span>
             <span>SYSTEM CONTROL ACTIVE</span>
           </div>

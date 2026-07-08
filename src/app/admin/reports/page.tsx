@@ -54,17 +54,17 @@ export default function AdminReportsPage() {
           const isCurrent = downloading === r.name;
 
           return (
-            <div key={r.name} className="p-6 bg-slate-900 border border-[#1e293b] rounded-xl flex items-start gap-4 shadow-lg hover:border-slate-700 transition-all duration-300">
-              <div className="p-3.5 bg-slate-950 text-[#ef4444] rounded-xl">
+            <div key={r.name} className="p-6 bg-white border border-slate-200 rounded-xl flex items-start gap-4 shadow-sm hover:border-slate-300 transition-all duration-300">
+              <div className="p-3.5 bg-slate-50 text-[#ef4444] border border-slate-100 rounded-xl">
                 <Icon className="h-5 w-5" />
               </div>
               <div className="flex-1 space-y-1.5">
-                <h3 className="font-bold text-sm text-white capitalize">{r.name} Data Ledger</h3>
-                <p className="text-xs text-slate-400">{r.desc}</p>
+                <h3 className="font-bold text-sm text-slate-800 capitalize">{r.name} Data Ledger</h3>
+                <p className="text-xs text-slate-500">{r.desc}</p>
                 <button
                   onClick={() => handleExport(r.name)}
                   disabled={!!downloading}
-                  className="mt-3 px-3.5 py-2 bg-slate-950 border border-[#1e293b] hover:border-slate-500 text-slate-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="mt-3 px-3.5 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Download className="h-3.5 w-3.5" />
                   <span>{isCurrent ? 'Exporting...' : 'Download CSV'}</span>

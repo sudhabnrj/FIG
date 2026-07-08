@@ -90,16 +90,16 @@ export default function AdminQuestionsPage() {
       </AdminHeader>
 
       {/* Filters */}
-      <div className="bg-slate-900 border border-[#1e293b] rounded-xl p-4 shadow-lg flex flex-col md:flex-row md:items-center gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
         <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
           <input
             type="text"
             placeholder="Search questions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 p-2 bg-slate-950 border border-[#1e293b] rounded-lg text-slate-300 focus:outline-none focus:border-[#ef4444] text-xs"
+            className="flex-1 p-2 bg-white border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:border-[#ef4444] text-xs"
           />
-          <button type="submit" className="px-4 py-2 bg-slate-950 border border-[#1e293b] hover:border-slate-500 text-slate-300 rounded-lg text-xs font-bold transition-all">
+          <button type="submit" className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-bold transition-all">
             <Search className="h-3.5 w-3.5" />
           </button>
         </form>
@@ -108,7 +108,7 @@ export default function AdminQuestionsPage() {
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            className="p-2 bg-slate-950 border border-[#1e293b] rounded-lg text-xs text-slate-300 font-semibold focus:outline-none"
+            className="p-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 font-semibold focus:outline-none"
           >
             <option value="">All Statuses</option>
             <option value="active">Active</option>
@@ -121,7 +121,7 @@ export default function AdminQuestionsPage() {
           <select
             value={difficulty}
             onChange={(e) => { setDifficulty(e.target.value); setPage(1); }}
-            className="p-2 bg-slate-950 border border-[#1e293b] rounded-lg text-xs text-slate-300 font-semibold focus:outline-none"
+            className="p-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 font-semibold focus:outline-none"
           >
             <option value="">All Difficulties</option>
             <option value="easy">Easy</option>
@@ -133,7 +133,7 @@ export default function AdminQuestionsPage() {
 
       {/* Table list */}
       {loading ? (
-        <div className="flex h-48 items-center justify-center bg-slate-900 border border-[#1e293b] rounded-xl shadow-lg">
+        <div className="flex h-48 items-center justify-center bg-white border border-slate-200 rounded-xl shadow-sm">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#ef4444] border-t-transparent"></div>
         </div>
       ) : questions.length === 0 ? (
@@ -141,18 +141,18 @@ export default function AdminQuestionsPage() {
       ) : (
         <AdminTable headers={['Title', 'Category', 'Difficulty', 'Status', 'Author', 'Last Updated', 'Actions']}>
           {questions.map((q) => (
-            <tr key={q._id} className="hover:bg-slate-800/20 transition-all border-b border-[#1e293b]">
-              <td className="p-4 font-bold max-w-[200px] truncate" title={q.title || q.question.slice(0, 50)}>
+            <tr key={q._id} className="hover:bg-slate-50 transition-all border-b border-slate-100">
+              <td className="p-4 font-bold max-w-[200px] truncate text-slate-800" title={q.title || q.question.slice(0, 50)}>
                 {q.title || q.question.slice(0, 50)}
               </td>
-              <td className="p-4 capitalize text-xs">{q.category}</td>
+              <td className="p-4 capitalize text-xs text-slate-600">{q.category}</td>
               <td className="p-4 text-xs font-semibold">
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                   q.difficulty === 'easy'
-                    ? 'bg-green-500/10 text-green-400'
+                    ? 'bg-green-500/10 text-green-600 border border-green-500/20'
                     : q.difficulty === 'medium'
-                    ? 'bg-yellow-500/10 text-yellow-400'
-                    : 'bg-red-500/10 text-red-400'
+                    ? 'bg-yellow-500/10 text-yellow-600 border border-yellow-500/20'
+                    : 'bg-red-500/10 text-red-600 border border-red-500/20'
                 }`}>
                   {q.difficulty}
                 </span>
@@ -160,21 +160,21 @@ export default function AdminQuestionsPage() {
               <td className="p-4">
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                   q.status === 'active' || q.status === 'approved'
-                    ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                    ? 'bg-green-500/10 text-green-600 border border-green-500/20'
                     : q.status === 'pending_review'
-                    ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
-                    : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                    ? 'bg-yellow-500/10 text-yellow-600 border border-yellow-500/20'
+                    : 'bg-red-500/10 text-red-600 border border-red-500/20'
                 }`}>
                   {q.status.replace('_', ' ')}
                 </span>
               </td>
-              <td className="p-4 text-xs font-semibold text-slate-300">{q.authorId?.name || 'Contributor'}</td>
-              <td className="p-4 text-xs text-slate-400">{new Date(q.updatedAt || q.createdAt).toLocaleDateString()}</td>
+              <td className="p-4 text-xs font-semibold text-slate-600">{q.authorId?.name || 'Contributor'}</td>
+              <td className="p-4 text-xs text-slate-500">{new Date(q.updatedAt || q.createdAt).toLocaleDateString()}</td>
               <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
-                <Link href={`/dashboard/questions/edit/${q._id}`} className="inline-flex p-1.5 text-blue-400 hover:bg-blue-500/10 rounded" title="Edit Question">
+                <Link href={`/dashboard/questions/edit/${q._id}`} className="inline-flex p-1.5 text-blue-500 hover:bg-blue-500/10 rounded" title="Edit Question">
                   <Edit3 className="h-4.5 w-4.5" />
                 </Link>
-                <button onClick={() => handleDelete(q._id)} className="p-1.5 text-red-400 hover:bg-red-500/10 rounded bg-transparent border-0 cursor-pointer" title="Delete Question">
+                <button onClick={() => handleDelete(q._id)} className="p-1.5 text-red-500 hover:bg-red-500/10 rounded bg-transparent border-0 cursor-pointer" title="Delete Question">
                   <Trash2 className="h-4.5 w-4.5" />
                 </button>
               </td>
@@ -185,20 +185,20 @@ export default function AdminQuestionsPage() {
 
       {/* Pagination */}
       {pagesCount > 1 && (
-        <div className="p-4 bg-slate-900 border border-[#1e293b] rounded-xl flex items-center justify-between gap-4">
-          <span className="text-xs text-slate-400">Showing page {page} of {pagesCount}</span>
+        <div className="p-4 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-4 shadow-sm">
+          <span className="text-xs text-slate-500">Showing page {page} of {pagesCount}</span>
           <div className="flex gap-1.5">
             <button
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
-              className="px-3 py-1.5 border border-[#1e293b] rounded hover:bg-slate-800 text-xs font-bold cursor-pointer disabled:opacity-50 text-slate-300"
+              className="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 text-xs font-bold cursor-pointer disabled:opacity-50 text-slate-700 bg-white"
             >
               Previous
             </button>
             <button
               disabled={page === pagesCount}
               onClick={() => setPage(page + 1)}
-              className="px-3 py-1.5 border border-[#1e293b] rounded hover:bg-slate-800 text-xs font-bold cursor-pointer disabled:opacity-50 text-slate-300"
+              className="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 text-xs font-bold cursor-pointer disabled:opacity-50 text-slate-700 bg-white"
             >
               Next
             </button>

@@ -153,7 +153,7 @@ export default function AdminCategoriesPage() {
         title="Subjects & Categories Management"
         description="Add dynamic interview categories, update sorting orders, or merge redundant categories."
       >
-        <button onClick={() => setShowMergeModal(true)} className="px-3.5 py-2 border border-[#1e293b] bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5">
+        <button onClick={() => setShowMergeModal(true)} className="px-3.5 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5">
           <GitMerge className="h-4 w-4" />
           <span>Merge Categories</span>
         </button>
@@ -165,7 +165,7 @@ export default function AdminCategoriesPage() {
 
       {/* Categories Grid */}
       {loading ? (
-        <div className="flex h-48 items-center justify-center bg-slate-900 border border-[#1e293b] rounded-xl shadow-lg">
+        <div className="flex h-48 items-center justify-center bg-white border border-slate-200 rounded-xl shadow-sm">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#ef4444] border-t-transparent"></div>
         </div>
       ) : categories.length === 0 ? (
@@ -173,19 +173,19 @@ export default function AdminCategoriesPage() {
       ) : (
         <AdminTable headers={['Icon', 'Category Name', 'Slug', 'Description', 'Sort Order', 'Actions']}>
           {categories.map((cat) => (
-            <tr key={cat._id} className="hover:bg-slate-800/20 transition-all border-b border-[#1e293b]">
+            <tr key={cat._id} className="hover:bg-slate-50 transition-all border-b border-slate-100">
               <td className="p-4 text-center text-[#ef4444] text-base">
                 <i className={`fas ${cat.icon || 'fa-folder'}`}></i>
               </td>
-              <td className="p-4 font-bold text-white">{cat.name}</td>
-              <td className="p-4 text-xs font-mono text-slate-400">{cat.slug}</td>
-              <td className="p-4 text-xs text-slate-400 max-w-[200px] truncate">{cat.description || '—'}</td>
-              <td className="p-4 text-xs font-semibold text-white">{cat.order}</td>
+              <td className="p-4 font-bold text-slate-800">{cat.name}</td>
+              <td className="p-4 text-xs font-mono text-slate-500">{cat.slug}</td>
+              <td className="p-4 text-xs text-slate-500 max-w-[200px] truncate">{cat.description || '—'}</td>
+              <td className="p-4 text-xs font-semibold text-slate-800">{cat.order}</td>
               <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
-                <button onClick={() => handleOpenEdit(cat)} className="p-1.5 text-blue-400 hover:bg-blue-500/10 rounded bg-transparent border-0 cursor-pointer text-xs" title="Edit Category">
+                <button onClick={() => handleOpenEdit(cat)} className="p-1.5 text-blue-500 hover:bg-blue-500/10 rounded bg-transparent border-0 cursor-pointer text-xs" title="Edit Category">
                   <Edit3 className="h-4.5 w-4.5" />
                 </button>
-                <button onClick={() => handleDelete(cat._id)} className="p-1.5 text-red-400 hover:bg-red-500/10 rounded bg-transparent border-0 cursor-pointer text-xs" title="Delete Category">
+                <button onClick={() => handleDelete(cat._id)} className="p-1.5 text-red-500 hover:bg-red-500/10 rounded bg-transparent border-0 cursor-pointer text-xs" title="Delete Category">
                   <Trash2 className="h-4.5 w-4.5" />
                 </button>
               </td>
@@ -197,52 +197,52 @@ export default function AdminCategoriesPage() {
       {/* Add / Edit Category Modal */}
       {showAddEditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <form onSubmit={handleAddEditSubmit} className="bg-slate-900 border border-[#1e293b] rounded-xl p-6 w-full max-w-sm space-y-4 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="font-bold text-sm text-white">{editingCategory ? 'Edit Category' : 'Create Category'}</h3>
+          <form onSubmit={handleAddEditSubmit} className="bg-white border border-slate-200 rounded-xl p-6 w-full max-w-sm space-y-4 shadow-xl animate-in fade-in zoom-in-95 duration-150 text-slate-800">
+            <h3 className="font-bold text-sm text-slate-800">{editingCategory ? 'Edit Category' : 'Create Category'}</h3>
             <div>
-              <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Category Name</label>
+              <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Category Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. JavaScript"
-                className="w-full p-2.5 bg-slate-950 border border-[#1e293b] rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-white"
+                className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-slate-800"
                 required
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Description</label>
+              <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Description</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Brief summary description..."
                 rows={2}
-                className="w-full p-2.5 bg-slate-950 border border-[#1e293b] rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-white resize-none"
+                className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-slate-800 resize-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">FA Icon Code</label>
+                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">FA Icon Code</label>
                 <input
                   type="text"
                   value={icon}
                   onChange={(e) => setIcon(e.target.value)}
                   placeholder="e.g. fa-js"
-                  className="w-full p-2.5 bg-slate-950 border border-[#1e293b] rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-white"
+                  className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-slate-800"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sort order</label>
+                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Sort order</label>
                 <input
                   type="number"
                   value={order}
                   onChange={(e) => setOrder(Number(e.target.value))}
-                  className="w-full p-2.5 bg-slate-950 border border-[#1e293b] rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-white"
+                  className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-slate-800"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 text-xs font-bold pt-2">
-              <button type="button" onClick={() => setShowAddEditModal(false)} className="px-3.5 py-2 border border-[#1e293b] rounded-lg bg-transparent text-slate-400 hover:bg-slate-800 cursor-pointer">
+              <button type="button" onClick={() => setShowAddEditModal(false)} className="px-3.5 py-2 border border-slate-200 rounded-lg bg-transparent text-slate-500 hover:bg-slate-50 cursor-pointer">
                 Cancel
               </button>
               <button type="submit" className="px-4 py-2 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] border-0 cursor-pointer">
@@ -256,18 +256,18 @@ export default function AdminCategoriesPage() {
       {/* Merge Modal */}
       {showMergeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <form onSubmit={handleMergeSubmit} className="bg-slate-900 border border-[#1e293b] rounded-xl p-6 w-full max-w-sm space-y-4 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="font-bold text-sm text-white flex items-center gap-1.5">
+          <form onSubmit={handleMergeSubmit} className="bg-white border border-slate-200 rounded-xl p-6 w-full max-w-sm space-y-4 shadow-xl animate-in fade-in zoom-in-95 duration-150 text-slate-800">
+            <h3 className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
               <GitMerge className="h-4.5 w-4.5 text-[#ef4444]" />
               <span>Merge Categories</span>
             </h3>
-            <p className="text-xs text-slate-400">Warning: This shifts all questions associated with the Source Category to the Target Category, and then deletes the source entry.</p>
+            <p className="text-xs text-slate-500">Warning: This shifts all questions associated with the Source Category to the Target Category, and then deletes the source entry.</p>
             <div>
-              <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Source Category (deletes)</label>
+              <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Source Category (deletes)</label>
               <select
                 value={sourceId}
                 onChange={(e) => setSourceId(e.target.value)}
-                className="w-full p-2.5 bg-slate-950 border border-[#1e293b] rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-white"
+                className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-slate-800"
                 required
               >
                 <option value="">Select Category</option>
@@ -277,11 +277,11 @@ export default function AdminCategoriesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Target Category (absorbs questions)</label>
+              <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Target Category (absorbs questions)</label>
               <select
                 value={destinationId}
                 onChange={(e) => setDestinationId(e.target.value)}
-                className="w-full p-2.5 bg-slate-950 border border-[#1e293b] rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-white"
+                className="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-[#ef4444] text-slate-800"
                 required
               >
                 <option value="">Select Category</option>
@@ -291,7 +291,7 @@ export default function AdminCategoriesPage() {
               </select>
             </div>
             <div className="flex justify-end gap-2 text-xs font-bold pt-2">
-              <button type="button" onClick={() => setShowMergeModal(false)} className="px-3.5 py-2 border border-[#1e293b] rounded-lg bg-transparent text-slate-400 hover:bg-slate-800 cursor-pointer">
+              <button type="button" onClick={() => setShowMergeModal(false)} className="px-3.5 py-2 border border-slate-200 rounded-lg bg-transparent text-slate-500 hover:bg-slate-50 cursor-pointer">
                 Cancel
               </button>
               <button type="submit" disabled={merging} className="px-4 py-2 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] border-0 cursor-pointer disabled:opacity-50">
